@@ -10,9 +10,9 @@ def index():
 
 @app.route('/controls')
 def controls():
-    return '<h1>Controls Page!</h1>'
+    return render_template('controls.html')
 
 @app.route('/photoviewer')
 def photoViewer():
-    return '<h1>Photo Viewer Page!</h1>'
+    return render_template('photoViewer.html')
 

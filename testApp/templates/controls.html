@@ -4,15 +4,38 @@
 <body>
     <header>
         <div class="Container">
-            <h1 class="Logo"> PartyCam Controls Menu</h1>
+            <h1 class="Logo"> SharkCam Controls Menu</h1>
             <strong>
                 <nav>
-
                     <ul class="Menu">
                         <li><a href={{ url_for('index') }}> Main Menu</a></li>
                     </ul>
                 </nav>
             </strong>
+            <h2 class="Controls Header"> Control Buttons</h2>
+            <div class="Control Buttons">
+                <form action="/start" method="post">
+                    <button value="start" name="startButton" onclick="start()">Start</button>
+                </form>
+                <form action="/stop" method="post">
+                    <button value="stop" name="stopButton" onclick="stop()">Stop</button>
+                </form>
+                <form action="/controls" method="post">
+                    <button value="photoMessage" name="photoButton" onclick="takePhoto()">Take Picture
+                    </button>
+                </form>
+
+                <body>
+                    <p>
+                        Robot Status: {{message}}
+                    </p>
+                </body>
+            </div>
+            <div class="video feed">
+                <img src="{{ url_for('livestream') }}" width="50%">
+                <img src="{{ url_for('takePhoto') }}" width="50%">
+            </div>
+
         </div>
     </header>
 </body>

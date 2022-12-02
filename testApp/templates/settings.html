@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <header>
+        <div class="Container">
+            <h1 class="Logo"> SharkCam Settings </h1>
+            <strong>
+                <nav>
+                    <ul class="Menu">
+                        <li><a href={{ url_for('index') }}> Main Menu</a></li>
+                    </ul>
+                </nav>
+            </strong>
+
+            <div class="Settings Dropdowns">
+                <form action="/settings" method="post">
+                    <button value="photoInterval" name="photoIntervalDropdown" onclick="setInterval()">Photo Capture
+                        Interval</button>
+                    <div class="listItems">
+                        <a href="#">30 Seconds</a>
+                        <a href="#">60 Seconds</a>
+                        <a href="#">120 Seconds</a>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </header>
+</body>
+
+</html>

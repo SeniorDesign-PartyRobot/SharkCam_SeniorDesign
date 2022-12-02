@@ -2,6 +2,28 @@ from flask import Flask, render_template, url_for, Response
 import cv2 as cv
 import numpy as np
 
+# # #  Import the functions you need from the SDKs you need
+# # import { initializeApp } from "firebase/app";
+# # import { getAnalytics } from "firebase/analytics";
+# # # // TODO: Add SDKs for Firebase products that you want to use
+# # # // https://firebase.google.com/docs/web/setup#available-libraries
+
+# # # // Your web app's Firebase configuration
+# # # // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+# # firebaseConfig = {
+# #   apiKey: "AIzaSyBdKaaG7FDF7YovzMAJxeX55D-n4wRoTgM",
+# #   authDomain: "sharkcamapp.firebaseapp.com",
+# #   projectId: "sharkcamapp",
+# #   storageBucket: "sharkcamapp.appspot.com",
+# #   messagingSenderId: "416897826819",
+# #   appId: "1:416897826819:web:21ee93949de0c9fcfd4e36",
+# #   measurementId: "G-5Y35RKDW7F"
+# # };
+
+# # # // Initialize Firebase
+# # app = initializeApp(firebaseConfig);
+# # analytics = getAnalytics(app);
+
 app = Flask(__name__)
 
 #webpages
@@ -13,6 +35,7 @@ def index():
 @app.route('/controls', methods = ['GET', 'POST'])
 def controls():
     return render_template('controls.html')
+
 
 @app.route('/photoviewer')
 def photoViewer():
@@ -37,7 +60,6 @@ def photoMessage():
     print("recording")
     return render_template('controls.html', message=camera_message)
 
-# with app.app.context():
 
 #I know global variables are a sin
 camera = cv.VideoCapture(0) #use local camera feed
@@ -74,26 +96,12 @@ def photoCapture():
 def takePhoto():
     return Response(photoCapture(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# def livestream():
-#     # CV2 functionality code from cv2 site
-#     cap = cv.VideoCapture(0) # uses local camera feed
-#     if not cap.isOpened():
-#         print("Cannot open camera")
-#         exit()
-#     while True:
-#         # Capture frame-by-frame
-#         ret, frame = cap.read()
-#         # if frame is read correctly ret is True
-#         if not ret:
-#             print("Can't receive frame (stream end?). Exiting ...")
-#             break
-#         # Our operations on the frame come here
-#         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-#         # Display the resulting frame
-#         cv.imshow('frame', gray)
-#         if cv.waitKey(1) == ord('q'):
-#             break
-#     # When everything done, release the capture
-#     cap.release()
-#     cv.destroyAllWindows()
-#     return render_template('controls.html')
+
+# Settings def and functions
+@app.route('/settings', methods = ['GET', 'POST'])
+def settings():
+    return render_template('settings.html')
+
+def setInterval():
+    print("Photo interval set")
+

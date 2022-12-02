@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <header>
+        <div class="Container">
+            <h1 class="Logo"> SharkCam Settings </h1>
+            <strong>
+                <nav>
+                    <ul class="Menu">
+                        <li><a href={{ url_for('index') }}> Main Menu</a></li>
+                    </ul>
+                </nav>
+            </strong>
+
+            <div class="Settings">
+                <form action="/settings" method="post">
+                    <label value="photoInterval" name="photoIntervalDropdown" onclick="setInterval()">Photo Capture
+                        Interval</label>
+                    <select class="listItems">
+                        <option value="30">30 Seconds</option>
+                        <option value="60">60 Seconds</option>
+                        <option value="120">120 Seconds</option>
+
+                    </select>
+                    <button value="startScan" onclick="sendScanCommand()">Start Room Scan</button>
+                </form>
+            </div>
+
+        </div>
+    </header>
+</body>
+
+</html>

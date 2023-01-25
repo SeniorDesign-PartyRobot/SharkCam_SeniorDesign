@@ -1,29 +1,49 @@
 from flask import Flask, render_template, url_for, Response
 import cv2 as cv
 import numpy as np
+#firebase init
+import firebase_admin
+from firebase_admin import credentials, firestore
+# photo inits
+from PIL import Image, ImageShow
+import io
 
-# # #  Import the functions you need from the SDKs you need
-# # import { initializeApp } from "firebase/app";
-# # import { getAnalytics } from "firebase/analytics";
-# # # // TODO: Add SDKs for Firebase products that you want to use
-# # # // https://firebase.google.com/docs/web/setup#available-libraries
+# more firebase setup- NOTE: We are using FIRESTORE, not REALTIME DATABASE
+cred = credentials.Certificate("./serviceAccountKey.json")
+firebase_admin.initialize_app(cred)
 
-# # # // Your web app's Firebase configuration
-# # # // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-# # firebaseConfig = {
-# #   apiKey: "AIzaSyBdKaaG7FDF7YovzMAJxeX55D-n4wRoTgM",
-# #   authDomain: "sharkcamapp.firebaseapp.com",
-# #   projectId: "sharkcamapp",
-# #   storageBucket: "sharkcamapp.appspot.com",
-# #   messagingSenderId: "416897826819",
-# #   appId: "1:416897826819:web:21ee93949de0c9fcfd4e36",
-# #   measurementId: "G-5Y35RKDW7F"
-# # };
+#do some testing
+db = firestore.client()
 
-# # # // Initialize Firebase
-# # app = initializeApp(firebaseConfig);
-# # analytics = getAnalytics(app);
+def storeImage():
+    #now let's try an image in a specific folder that's already there
+    image = Image.open(r"testPhotos/testPic.jpg")
+    imageInBytes = image.tobytes("xbm", "rbg")
+    photoCollection = db.collection('photoTest')
+    photoData = photoCollection.document('photo').set({
+        'imageData' : imageInBytes
+    })
 
+def dispImage():
+    # pull the image 
+    photoRef = db.collection('photoTest').document('photo')
+    photo = photoRef.get()
+    if photo.exists:
+        # get bytes as string
+        # this is one way to get the bytes I think
+        photoBytes = photo.to_dict()["imageData"]
+        ImageShow.show(photoBytes)
+        
+
+        # convert to byte array
+        # photoBytes = bytes(photoBytes, 'utf-8')
+        # convert bytes to image
+        # print(type(photoBytes))
+        image = Image.frombytes("RGB",(1200,800), photoBytes)
+        # image.save("./photoTestFromBytes")
+
+# call the disp image function
+dispImage()
 app = Flask(__name__)
 
 #webpages
@@ -38,8 +58,9 @@ def controls():
 
 
 @app.route('/photoviewer')
-def photoViewer():
-    return render_template('photoViewer.html')
+def photoViewer(image):
+    return render_template('photoViewer.html',image=image)
+
 
 # Controls
 @app.route('/start', methods=['GET', 'POST'])

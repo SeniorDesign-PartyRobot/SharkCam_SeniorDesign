@@ -23,8 +23,31 @@
                         <option value="120">120 Seconds</option>
 
                     </select>
-                    <button value="startScan" onclick="sendScanCommand()">Start Room Scan</button>
+
                 </form>
+                <form action="/settings" method="post">
+                    <label value="photoInterval" name="wanderTimeDropdown" onclick="setInterval()">Time Taking
+                        Photos</label>
+                    <select class="listItems">
+                        <option value="30">10 Minutes</option>
+                        <option value="60">30 Minutes</option>
+                        <option value="120">60 Minutes</option>
+
+                    </select>
+
+                </form>
+                <form action="/settings" method="post">
+                    <label value="photoInterval" name="photoPerIntervalDropdown" onclick="setInterval()">Photos Per
+                        Interval</label>
+                    <select class="listItems">
+                        <option value="30">1</option>
+                        <option value="60">3</option>
+                        <option value="120">5</option>
+
+                    </select>
+
+                </form>
+                <form><button value="startScan" onclick="sendScanCommand()">Start Room Scan</button></form>
             </div>
 
         </div>

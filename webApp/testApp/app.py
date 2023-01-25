@@ -1,28 +1,63 @@
 from flask import Flask, render_template, url_for, Response
 import cv2 as cv
 import numpy as np
-#firebase init
-import firebase_admin
-from firebase_admin import credentials, firestore
+# Google Inits
+from google.cloud import storage
+from firebase import Firebase
+import os
 # photo inits
 from PIL import Image, ImageShow
-import io
 
-# more firebase setup- NOTE: We are using FIRESTORE, not REALTIME DATABASE
-cred = credentials.Certificate("./serviceAccountKey.json")
-firebase_admin.initialize_app(cred)
 
-#do some testing
-db = firestore.client()
+# Firebase Config
+# add firebase to application : https://pypi.org/project/firebase/
+#For Firebase JS SDK v7.20.0 and later, measurementId is optional
+firebaseConfig = {
+  "apiKey": "AIzaSyBdKaaG7FDF7YovzMAJxeX55D-n4wRoTgM",
+  "authDomain": "sharkcamapp.firebaseapp.com",
+  "projectId": "sharkcamapp",
+  "storageBucket": "sharkcamapp.appspot.com",
+  "messagingSenderId": "416897826819",
+  "appId": "1:416897826819:web:21ee93949de0c9fcfd4e36",
+  "measurementId": "G-5Y35RKDW7F",
+  "storageBucket": "gs://sharkcamapp.appspot.com",
+  "databaseURL": ""
+}
+
+firebase = Firebase(firebaseConfig)
+
+
+# init cloud storage
+os.environ["GCLOUD_PROJECT"] = "SharkCamApp"
+
+# trying cloud storage instead
+# using this setup: https://cloud.google.com/storage/docs/uploading-objects#storage-upload-object-client-libraries
+
+
+bucketName = "test_bucket_soupstyle"
+def initializeBucket():
+    #initialize a storage client
+    storageClient = storage.Client()
+    bucket = storageClient.bucket(bucketName)
+    bucket.storage_class = "COLDLINE"
+    # only need to initialize once
+    new_bucket = storageClient.create_bucket(bucket, location="us")
+    print("Created bucket {} in {} with storage class {}".format(new_bucket.name, new_bucket.location, new_bucket.storage_class))
+    return new_bucket
 
 def storeImage():
     #now let's try an image in a specific folder that's already there
-    image = Image.open(r"testPhotos/testPic.jpg")
-    imageInBytes = image.tobytes("xbm", "rbg")
-    photoCollection = db.collection('photoTest')
-    photoData = photoCollection.document('photo').set({
-        'imageData' : imageInBytes
-    })
+    imageName = "testPhotos/testPic.jpg"
+    # is this initialization already done above? How can I make these universal?
+    storageClient = storage.Client()
+    bucket = storageClient.bucket(bucketName)
+    blob = bucket.blob("testImage")
+    blob.upload_from_filename(imageName)
+    print(
+        f"File {imageName} uploaded to testImage."
+    )
+    
+    
 
 def dispImage():
     # pull the image 
@@ -43,7 +78,13 @@ def dispImage():
         # image.save("./photoTestFromBytes")
 
 # call the disp image function
-dispImage()
+def main():
+    #initializeBucket()
+    storeImage()
+    return 0
+main()
+
+################################################### FLASK STUFF #################################################
 app = Flask(__name__)
 
 #webpages

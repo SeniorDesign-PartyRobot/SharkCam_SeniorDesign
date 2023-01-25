@@ -36,13 +36,17 @@ os.environ["GCLOUD_PROJECT"] = "SharkCamApp"
 
 bucketName = "test_bucket_soupstyle"
 def initializeBucket():
-    #initialize a storage client
+    #initialize a storage client/check if bucket exists
     storageClient = storage.Client()
+    
     bucket = storageClient.bucket(bucketName)
     bucket.storage_class = "COLDLINE"
     # only need to initialize once
-    new_bucket = storageClient.create_bucket(bucket, location="us")
-    print("Created bucket {} in {} with storage class {}".format(new_bucket.name, new_bucket.location, new_bucket.storage_class))
+    if not bucket.exists():
+        new_bucket = storageClient.create_bucket(bucket, location="us")
+        print("Created bucket {} in {} with storage class {}".format(new_bucket.name, new_bucket.location, new_bucket.storage_class))
+    else:
+        new_bucket = storageClient.get_bucket(bucketName)
     return new_bucket
 
 def storeImage():
@@ -60,26 +64,11 @@ def storeImage():
     
 
 def dispImage():
-    # pull the image 
-    photoRef = db.collection('photoTest').document('photo')
-    photo = photoRef.get()
-    if photo.exists:
-        # get bytes as string
-        # this is one way to get the bytes I think
-        photoBytes = photo.to_dict()["imageData"]
-        ImageShow.show(photoBytes)
-        
-
-        # convert to byte array
-        # photoBytes = bytes(photoBytes, 'utf-8')
-        # convert bytes to image
-        # print(type(photoBytes))
-        image = Image.frombytes("RGB",(1200,800), photoBytes)
-        # image.save("./photoTestFromBytes")
+   print("word")
 
 # call the disp image function
 def main():
-    #initializeBucket()
+    initializeBucket()
     storeImage()
     return 0
 main()

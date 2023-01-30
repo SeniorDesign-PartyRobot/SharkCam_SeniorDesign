@@ -5,8 +5,8 @@ import numpy as np
 from google.cloud import storage
 from firebase import Firebase
 import os
-# photo inits
-from PIL import Image, ImageShow
+# error inits
+import sys
 
 # Firebase Config
 # add firebase to application : https://pypi.org/project/firebase/
@@ -33,41 +33,56 @@ os.environ["GCLOUD_PROJECT"] = "SharkCamApp"
 # using this setup: https://cloud.google.com/storage/docs/uploading-objects#storage-upload-object-client-libraries
 
 
-
 def initializeBucket(bucketName):
     #initialize a storage client/check if bucket exists
-    storageClient = storage.Client()
-    bucket = storageClient.bucket(bucketName)
-    bucket.storage_class = "COLDLINE"
-    # only need to initialize once
-    if not bucket.exists():
-        new_bucket = storageClient.create_bucket(bucket, location="us")
-        print("Created bucket {} in {} with storage class {}".format(new_bucket.name, new_bucket.location, new_bucket.storage_class))
-    else:
-        new_bucket = storageClient.get_bucket(bucketName)
-    return new_bucket
+    try: 
+        storageClient = storage.Client()
+        bucket = storageClient.bucket(bucketName)
+        bucket.storage_class = "COLDLINE"
+        # only need to initialize once
+        if not bucket.exists():
+            new_bucket = storageClient.create_bucket(bucket, location="us")
+            print("Created bucket {} in {} with storage class {}".format(new_bucket.name, new_bucket.location, new_bucket.storage_class))
+        else:
+            new_bucket = storageClient.get_bucket(bucketName)
+        return new_bucket
+    except:
+        print('Error Message', file=sys.stderr)
 
 def storeImage(imageName, blobName, bucketName):
     #now let's try an image in a specific folder that's already there
-    # is this initialization already done above? How can I make these universal?
-    storageClient = storage.Client()
-    bucket = storageClient.bucket(bucketName)
-    blob = bucket.blob(blobName)
-    blob.upload_from_filename(imageName)
-    print(
-        f"File {imageName} uploaded to testImage."
-    )
+    try:
+        storageClient = storage.Client()
+        bucket = storageClient.bucket(bucketName)
+        blob = bucket.blob(blobName)
+        blob.upload_from_filename(imageName)
+        print(
+            f"File {imageName} uploaded to testImage."
+        )
+    except:
+        print('Error Message', file=sys.stderr)
 
-def dispImage():
-   print("word")
+def retrieveImage(destFileName, blobName, bucketName):
+    # implement portion downloading (in case of interruption) later
+    # portion downloading found here: https://cloud.google.com/storage/docs/downloading-objects#client-libraries-download-object
+    try:
+        storageClient = storage.Client()
+        bucket = storageClient.bucket(bucketName)
+        blob = bucket.blob(blobName)
+        blob.download_to_filename(destFileName)
+        print("Downloaded image to {}".format(destFileName))
+    except:
+        print('Error Message', file=sys.stderr)
 
-# call the disp image function
+
+# Main
 def main():
     bucketName = "seniordesignbucket"
     imageName = "testPhotos/testPic.jpg"
     blobName = "testImage"
     initializeBucket(bucketName)
     storeImage(imageName, blobName, bucketName)
+    retrieveImage("./downloadedImage.jpg", blobName, bucketName)
     return 0
 main()
 

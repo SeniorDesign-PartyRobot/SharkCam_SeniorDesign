@@ -8,7 +8,6 @@ import os
 # photo inits
 from PIL import Image, ImageShow
 
-
 # Firebase Config
 # add firebase to application : https://pypi.org/project/firebase/
 #For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -34,11 +33,10 @@ os.environ["GCLOUD_PROJECT"] = "SharkCamApp"
 # using this setup: https://cloud.google.com/storage/docs/uploading-objects#storage-upload-object-client-libraries
 
 
-bucketName = "test_bucket_soupstyle"
-def initializeBucket():
+
+def initializeBucket(bucketName):
     #initialize a storage client/check if bucket exists
     storageClient = storage.Client()
-    
     bucket = storageClient.bucket(bucketName)
     bucket.storage_class = "COLDLINE"
     # only need to initialize once
@@ -49,27 +47,27 @@ def initializeBucket():
         new_bucket = storageClient.get_bucket(bucketName)
     return new_bucket
 
-def storeImage():
+def storeImage(imageName, blobName, bucketName):
     #now let's try an image in a specific folder that's already there
-    imageName = "testPhotos/testPic.jpg"
     # is this initialization already done above? How can I make these universal?
     storageClient = storage.Client()
     bucket = storageClient.bucket(bucketName)
-    blob = bucket.blob("testImage")
+    blob = bucket.blob(blobName)
     blob.upload_from_filename(imageName)
     print(
         f"File {imageName} uploaded to testImage."
     )
-    
-    
 
 def dispImage():
    print("word")
 
 # call the disp image function
 def main():
-    initializeBucket()
-    storeImage()
+    bucketName = "seniordesignbucket"
+    imageName = "testPhotos/testPic.jpg"
+    blobName = "testImage"
+    initializeBucket(bucketName)
+    storeImage(imageName, blobName, bucketName)
     return 0
 main()
 

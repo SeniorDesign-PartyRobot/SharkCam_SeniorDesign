@@ -1,0 +1,1535 @@
+{
+    "BA": {
+        "batteryvolt": {
+            "type": "word",
+            "size": 4,
+            "unit": "mV",
+            "convert": true,
+            "special": false
+        },
+        "dischargingcurrent": {
+            "type": "word",
+            "size": 4,
+            "unit": "mA",
+            "convert": true,
+            "special": false
+        },
+        "stateofcharge": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        }
+    },
+    "BC": {
+        "chargerdetect": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "chargervoltage": {
+            "type": "word",
+            "size": 4,
+            "unit": "mV",
+            "convert": true,
+            "special": false
+        },
+        "chargingcurrent": {
+            "type": "word",
+            "size": 4,
+            "unit": "mA",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DA": {
+        "dutycycle": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        },
+        "ADCvalue": {
+            "type": "word",
+            "size": 4,
+            "unit": "mA",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DB": {
+        "brush": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "dutycycle": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        },
+        "ADCvalue": {
+            "type": "word",
+            "size": 4,
+            "unit": "mAh",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DC": {
+        "dutycycle": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        },
+        "ADCvalue": {
+            "type": "word",
+            "size": 4,
+            "unit": "mAh",
+            "convert": true,
+            "special": false
+        },
+        "speed": {
+            "type": "word",
+            "size": 4,
+            "unit": "Hz",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DD": {
+        "roller_direction": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "roller_set_speed": {
+            "type": "word",
+            "size": 4,
+            "unit": "rpm",
+            "convert": true,
+            "special": false
+        },
+        "roller_read_speed": {
+            "type": "word",
+            "size": 4,
+            "unit": "rpm",
+            "convert": true,
+            "special": false
+        },
+        "ADCvalue": {
+            "type": "word",
+            "size": 4,
+            "unit": "mAh",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DG": {
+        "selection": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "dutycycle": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        },
+        "ADCvalue": {
+            "type": "word",
+            "size": 4,
+            "unit": "mAh",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DH": {
+        "sensor": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "threshold": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DJ": {
+        "sensor": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "thresholdnear": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "thresholdfar": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DK": {
+        "cal": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "PmdutyCycle": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        },
+        "Pmtime": {
+            "type": "word",
+            "size": 4,
+            "unit": "mS",
+            "convert": true,
+            "special": false
+        },
+        "WmdutyCycle": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        },
+        "Wmtime": {
+            "type": "word",
+            "size": 4,
+            "unit": "mS",
+            "convert": true,
+            "special": false
+        },
+        "barcodeflow": {
+            "type": "word",
+            "size": 4,
+            "unit": "mL/min",
+            "convert": true,
+            "special": "/100"
+        }
+    },
+    "DL": {
+        "motortype": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "dutycycle": {
+            "type": "byte",
+            "size": 2,
+            "unit": "%",
+            "convert": true,
+            "special": false
+        },
+        "ADCvalue": {
+            "type": "word",
+            "size": 4,
+            "unit": "mAh",
+            "convert": true,
+            "special": false
+        },
+        "speed": {
+            "type": "word",
+            "size": 4,
+            "unit": "Hz",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DM": {
+        "wheel": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "direction": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "speed": {
+            "type": "word",
+            "size": 4,
+            "unit": "mm/S",
+            "convert": true,
+            "special": false
+        },
+        "ADCvalue": {
+            "type": "word",
+            "size": 4,
+            "unit": "mAh",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DP": {
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DR": {
+        "wheel": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "speed": {
+            "type": "word",
+            "size": 4,
+            "unit": "mm/S",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DS": {
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DT": {
+        "sensor": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DU": {
+        "sensor": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "type": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "ambient_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DV": {
+        "Sensor": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "IRtypeA": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "IRtypeB": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "IRtypeC": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "IRtypeC'": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "IRtypeD": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "IRtypeZ": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "COUNTtypeA": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "COUNTtypeB": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "COUNTtypeC": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "COUNTtypeC'": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "COUNTtypeD": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "COUNTtypeZ": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DW": {
+        "wheel": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DX": {
+        "sensor": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "DY": {
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "EA": {
+        "id": {
+            "type": "char",
+            "size": 4,
+            "unit": "mAh",
+            "convert": true,
+            "special": false
+        },
+        "raw_adc": {
+            "type": "raw input",
+            "size": 4,
+            "unit": "hOhm",
+            "convert": true,
+            "special": false
+        }
+    },
+    "EC": {
+        "comm_string": {
+            "type": "string",
+            "size": 16,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "id": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "ED": {
+        "digital_io": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "EP": {
+        "power_state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "LG": {
+        "mode": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "MA": {
+        "model": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "firmware version": {
+            "type": "byte",
+            "size": 8,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "hardware version": {
+            "type": "byte",
+            "size": 8,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "MC": {
+        "error code": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "MD": {
+        "power status": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "ME": {
+        "work current": {
+            "type": "word",
+            "size": 4,
+            "unit": "mA",
+            "convert": true,
+            "special": false
+        }
+    },
+    "MF": {
+        "headAngle": {
+            "type": "word",
+            "size": 4,
+            "unit": "degree",
+            "convert": true,
+            "special": "/100"
+        }
+    },
+    "MG": {
+        "LidarHeadFreq": {
+            "type": "byte",
+            "size": 4,
+            "unit": "Hz",
+            "convert": true,
+            "special": "/100"
+        }
+    },
+    "MH": {
+        "headAngle": {
+            "type": "word",
+            "size": 4,
+            "unit": "degree",
+            "convert": true,
+            "special": "/100"
+        }
+    },
+    "MM": {
+        "dongle_state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "bootloader_state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "passcode": {
+            "type": "word",
+            "size": 4,
+            "unit": "mAh",
+            "convert": false,
+            "special": false
+        }
+    },
+    "NE": {
+        "sensor": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "x_value": {
+            "type": "string",
+            "size": 5,
+            "unit": "m/s^2",
+            "convert": false,
+            "special": "/100"
+        },
+        "y_value": {
+            "type": "string",
+            "size": 5,
+            "unit": "m/s^2",
+            "convert": false,
+            "special": "/100"
+        },
+        "z_value": {
+            "type": "string",
+            "size": 5,
+            "unit": "m/s^2",
+            "convert": false,
+            "special": "/100"
+        },
+        "gx_value": {
+            "type": "string",
+            "size": 5,
+            "unit": "m/s",
+            "convert": false,
+            "special": "/100"
+        },
+        "gy_value": {
+            "type": "string",
+            "size": 5,
+            "unit": "m/s",
+            "convert": false,
+            "special": "/100"
+        },
+        "gz_value": {
+            "type": "string",
+            "size": 5,
+            "unit": "m/s",
+            "convert": false,
+            "special": "/100"
+        },
+        "temperature": {
+            "type": "byte",
+            "size": 2,
+            "unit": "degrees",
+            "convert": true,
+            "special": false
+        }
+    },
+    "NH": {
+        "status": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "NI": {
+        "state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "x_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "y_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "z_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "gx_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "gy_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "gz_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "t_value": {
+            "type": "word",
+            "size": 4,
+            "unit": "C",
+            "convert": true,
+            "special": "/512 + 23"
+        }
+    },
+    "NP": {
+        "enable": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "NS": {
+        "status": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "camera": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "wakeup_line_low": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "wakeup_line_high": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "device_ID": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "PD": {
+        "variant": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "version": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "version_2": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "sub": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "PE": {
+        "comment": {
+            "type": "string",
+            "size": 255,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "PH": {
+        "variant": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "build": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "version": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "sub": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "UI": {
+        "dock": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        },
+        "clean": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": true,
+            "special": false
+        }
+    },
+    "WB": {
+        "serial number": {
+            "type": "string",
+            "size": 255,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WC": {
+        "assline": {
+            "type": "string",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "lots": {
+            "type": "string",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "flowrate": {
+            "type": "string",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "serial_number": {
+            "type": "string",
+            "size": 6,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WD": {
+        "ver": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "ppcode": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m1": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m2": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m3": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m4": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m5": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m6": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m7": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "m8": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h1": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h2": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h3": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h4": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h5": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h6": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h7": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "h8": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "C": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "L": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "T": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "O": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "S": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "Y": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "B": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "F": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "D": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "res": {
+            "type": "byte",
+            "size": 3,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "end": {
+            "type": "byte",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WE": {
+        "wifi_reset": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WF": {
+        "AA": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "BB": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "CC": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "MM DD YYYY": {
+            "type": "string",
+            "size": 255,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WG": {
+        "test": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "result": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WH": {
+        "AA": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "BB": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WI": {
+        "xxx": {
+            "type": "string",
+            "size": 3,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "yyy": {
+            "type": "string",
+            "size": 3,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "zzz": {
+            "type": "string",
+            "size": 3,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "aaa": {
+            "type": "string",
+            "size": 3,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WM": {
+        "results": {
+            "type": "byte",
+            "size": 32,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WN": {
+        "AA": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "BB": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "CC": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WP": {
+        "reset": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WR": {
+        "reset": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "wifi_setup_state": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WS": {
+        "model": {
+            "type": "string",
+            "size": 16,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "factory": {
+            "type": "string",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "line": {
+            "type": "string",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "date": {
+            "type": "string",
+            "size": 6,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "btb": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "serial": {
+            "type": "string",
+            "size": 5,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WT": {
+        "scan_success": {
+            "type": "char",
+            "size": 1,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WU": {
+        "Device_IOT_Serial_Number": {
+            "type": "char",
+            "size": 15,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WV": {
+        "model": {
+            "type": "string",
+            "size": 16,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "factory": {
+            "type": "string",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "date": {
+            "type": "string",
+            "size": 4,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "serial": {
+            "type": "string",
+            "size": 5,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WW": {
+        "model": {
+            "type": "string",
+            "size": 16,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "factory": {
+            "type": "string",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "line": {
+            "type": "string",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "date": {
+            "type": "string",
+            "size": 6,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "serial": {
+            "type": "string",
+            "size": 5,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WX": {
+        "model": {
+            "type": "string",
+            "size": 16,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "serial_number": {
+            "type": "string",
+            "size": 12,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WY": {
+        "SSID_MAC": {
+            "type": "string",
+            "size": 255,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    },
+    "WZ": {
+        "AA": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "BB": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "CC": {
+            "type": "byte",
+            "size": 2,
+            "unit": "",
+            "convert": false,
+            "special": false
+        },
+        "MM DD YYYY": {
+            "type": "string",
+            "size": 255,
+            "unit": "",
+            "convert": false,
+            "special": false
+        }
+    }
+}

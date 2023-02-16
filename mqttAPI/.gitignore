@@ -45,12 +45,7 @@ sanity/configs/run_config.json
 /common/passmanager/passmanager_config.json
 
 gui/battery/boc_mac_list.json
-common/Pipfile
-common/.placeholder
-battery/build/*
-common/ssh_controller/build/*
-common/build
-common/common.egg-info
+common/
 *mqtt_client.log
 *tar.gz
 map*

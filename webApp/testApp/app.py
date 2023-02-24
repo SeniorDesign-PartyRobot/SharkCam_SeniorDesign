@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, Response
 import cv2 as cv
 import numpy as np
+from waitress import serve
+#from ../networkingCode import networking
 
 ################################################### FLASK STUFF #################################################
 app = Flask(__name__)
@@ -46,6 +48,7 @@ camera = cv.VideoCapture(0) #use local camera feed
 
 def get_frames():
     while True:
+        
         success, frame = camera.read()
         if not success: #if nothing happens, break
             break
@@ -89,5 +92,9 @@ def sendScanCommand():
         print("scan command sent")
     except:
         print("Scan command not sent")
+
+
+################################################## MAIN ########################################################
+serve(app, host="0.0.0.0", port=8080)
 
 

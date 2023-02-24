@@ -26,6 +26,6 @@ for i in range(num_steps):
             GPIO.output(ControlPin[pin], step_sequence[step][pin])
         time.sleep(delay)
 
-# Clean up the GPIO pins
+# Clean up the GPIO pins 
 GPIO.cleanup()
 print("Goodbye")

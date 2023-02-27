@@ -4,24 +4,28 @@ from common.python_mqtt.mqtt_client import MQTTClient
 
 class MQTTFunctions(MQTTClient):
 
+
+    def test_func(self):
+        self.clean()
+
     def pause_robot(self):
-        while self.is_paused == False:
-            self.pause()
+        while MQTTClient.is_paused == False:
+            MQTTClient.pause()
             time.sleep(1)
 
     def dock_robot(self):
-        while self.is_docking == False:
-            self.dock()
+        while MQTTClient.is_docking == False:
+            MQTTClient.dock()
             time.sleep(1)
 
     def clean_NO_VAC(self):
-        while self.is_cleaning() == False:
-            self.set_fan_speed(0)
-            self.clean
+        while MQTTClient.is_cleaning() == False:
+            MQTTClient.set_fan_speed(0)
+            MQTTClient.clean()
             time.sleep(1)
 
     def move_robot_off_dock_NO_VAC(self):
-        if self.is_docked():
+        if MQTTClient.is_docked(self):
             self.clean_NO_VAC()
             time.sleep(15)
             self.pause_robot()
@@ -36,4 +40,4 @@ class MQTTFunctions(MQTTClient):
             time.sleep(capture_interval)
             self.pause_robot()
             time.sleep(capture_time)
-            self.clean_NO_VAC()
+            MQTTClient.resume()

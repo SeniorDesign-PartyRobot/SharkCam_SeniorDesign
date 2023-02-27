@@ -43,7 +43,7 @@ def basic_photo_run(capture_number, capture_interval):
         time.sleep(capture_interval)
         pause_robot()
         time.sleep(capture_time)
-        clean_NO_VAC()
+        mqtt_client.resume()
 
 basic_photo_run(capture_number,capture_interval)
 dock_robot()

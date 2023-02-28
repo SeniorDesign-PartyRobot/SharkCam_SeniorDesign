@@ -23,7 +23,7 @@ def run_sensor():
     ToF.timing_budget = timing_budget
 
     ToF.start_ranging()  # start measurments
-    for i in range(1000):
+    for i in range(100):
         while not ToF.data_ready:
             pass
         ToF.clear_interrupt()
@@ -37,4 +37,4 @@ def run_sensor():
     return 1
 
 if __name__ == "__main__":
-    run_sensor
+    run_sensor()

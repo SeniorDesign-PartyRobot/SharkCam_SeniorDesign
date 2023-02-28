@@ -8,27 +8,28 @@ mqtt_client = MQTTClient(robot_ip)
 
 
 capture_number = 2 # Number of times robot pauses to capture
-capture_interval = 10 # Time between captures
+capture_interval = 15 # Time between captures
 
 def pause_robot():
-    while mqtt_client.is_paused == False:
+    while mqtt_client.is_paused() == False:
         mqtt_client.pause()
         time.sleep(1)
 
 def dock_robot():
-    while mqtt_client.is_docking == False:
+    while mqtt_client.is_docking() == False:
         mqtt_client.dock()
         time.sleep(1)
 
-def clean_NO_VAC():
-    while mqtt_client.is_cleaning() == False:
-        mqtt_client.set_fan_speed(0)
-        mqtt_client.clean
-        time.sleep(1)
+# def clean_NO_VAC():
+#     while mqtt_client.is_cleaning() == False:
+#         mqtt_client.set_fan_speed(0)
+#         mqtt_client.clean()
+#         time.sleep(1)
 
 def move_robot_off_dock_NO_VAC():
      if mqtt_client.is_docked():
-        clean_NO_VAC()
+        mqtt_client.clean()
+        mqtt_client.set_fan_speed(0)
         time.sleep(15)
         pause_robot()
 
@@ -36,8 +37,7 @@ def move_robot_off_dock_NO_VAC():
 def basic_photo_run(capture_number, capture_interval):
     capture_time = 5 # Amount of time robot pauses to capture
     
-    move_robot_off_dock_NO_VAC()
-    clean_NO_VAC()
+    mqtt_client.resume()
     
     for i in range(capture_number):
         time.sleep(capture_interval)

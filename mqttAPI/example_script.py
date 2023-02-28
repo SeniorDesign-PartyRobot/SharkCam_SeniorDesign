@@ -2,7 +2,7 @@ import time
 
 from common.python_mqtt.mqtt_client import MQTTClient
 
-robot_ip = "10.221.203.1"
+robot_ip = "192.168.8.209"
 
 mqtt_client = MQTTClient(robot_ip)
 

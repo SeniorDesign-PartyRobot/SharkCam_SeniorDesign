@@ -12,36 +12,55 @@ import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'react-native';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+//import TcpSocket from 'react-native-tcp-socket';
+
+var ws = new WebSocket('ws://host.com/path');
+const WS_URL = 'ws://192.168.8.207:8000';
+
 
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'top' }}>
+      <Text>Home </Text>
       <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
+        title="Robot Controls"
+        onPress={() => navigation.navigate('RobotControls')}
       />
     </View>
   );
 }
 
-function DetailsScreen() {
+function sendMsg() {
+  console.log("button clicked!");
+
+};
+
+function RobotControls() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
+      <Text>Robot Controls</Text>
+      <Button
+        title="Say hello!"
+        onPress={() => sendMsg()}
+      />
     </View>
   );
-}
-
+};
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+  useWebSocket(WS_URL, {
+    onOpen: () => {
+      console.log('WebSocket connection established.');
+    }
+  });
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="RobotControls" component={RobotControls} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,19 +1,19 @@
-const { WebSocketServer } = require('ws');
-const http = require('http');
+const express = require("express");
+const app = express();
+const http = require("http");
+const WebSocket = require("ws");
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
-// Spinning the http server and the WebSocket server.
-const server = http.createServer();
-const wsServer = new WebSocketServer({ server });
-const port = 8000;
-server.listen(port, () => {
-    console.log(`WebSocket server is running on port ${port}`);
+wss.on("connection", function connection(ws) {
+    console.log('New connection');
+    ws.send('howdy');
+
 });
 
-const clients = {};
-
-// A new client connection request received
-wsServer.on('connection', function (connection) {
-    // Generate a unique code for every user
-
-    console.log(`Recieved a new connection.`);
+app.get("/", (req, res) => {
+    res.send("Hello World!");
+});
+server.listen(8080, () => {
+    console.log("Listening to port 8080");
 });

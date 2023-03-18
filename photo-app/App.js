@@ -32,6 +32,7 @@ function HomeScreen({ navigation }) {
 
 function sendMsg() {
   console.log("button clicked!");
+  ws.send('yeehaw');
 
 };
 
@@ -47,22 +48,24 @@ function RobotControls() {
   );
 };
 
+// inits are here because I'm tired
 const Stack = createNativeStackNavigator();
 const WS_URL = 'ws://192.168.8.207:8080';
+const ws = new WebSocket(WS_URL);
+
 function App() {
   const [serverState, setServerState] = React.useState('Loading...');
   const [messageText, setMessageText] = React.useState('');
   const [disableButton, setDisableButton] = React.useState(true);
   const [inputFieldEmpty, setInputFieldEmpty] = React.useState(true);
   const [serverMessages, setServerMessages] = React.useState([]);
-  const ws = new WebSocket(WS_URL);
+
   ws.onopen = () => {
     console.log('connected');
   }
 
   ws.onmessage = (data) => {
     console.log(data);
-    console.log('message');
   }
 
 

@@ -8,8 +8,12 @@ const wss = new WebSocket.Server({ server });
 wss.on("connection", function connection(ws) {
     console.log('New connection');
     ws.send('howdy');
+    ws.on('message', (data) => {
 
+        console.log(data.toString());
+    });
 });
+
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -17,3 +21,4 @@ app.get("/", (req, res) => {
 server.listen(8080, () => {
     console.log("Listening to port 8080");
 });
+

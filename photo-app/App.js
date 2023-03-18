@@ -15,8 +15,7 @@ import { Button } from 'react-native';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 //import TcpSocket from 'react-native-tcp-socket';
 
-var ws = new WebSocket('ws://host.com/path');
-const WS_URL = 'ws://192.168.8.207:8000';
+
 
 
 function HomeScreen({ navigation }) {
@@ -49,13 +48,24 @@ function RobotControls() {
 };
 
 const Stack = createNativeStackNavigator();
-
+const WS_URL = 'ws://192.168.8.207:8080';
 function App() {
-  useWebSocket(WS_URL, {
-    onOpen: () => {
-      console.log('WebSocket connection established.');
-    }
-  });
+  const [serverState, setServerState] = React.useState('Loading...');
+  const [messageText, setMessageText] = React.useState('');
+  const [disableButton, setDisableButton] = React.useState(true);
+  const [inputFieldEmpty, setInputFieldEmpty] = React.useState(true);
+  const [serverMessages, setServerMessages] = React.useState([]);
+  const ws = new WebSocket(WS_URL);
+  ws.onopen = () => {
+    console.log('connected');
+  }
+
+  ws.onmessage = (data) => {
+    console.log(data);
+    console.log('message');
+  }
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

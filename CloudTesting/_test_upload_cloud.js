@@ -1,4 +1,5 @@
 ////////////////////////////////////////////////////
+// Testing code to upload a single harcoded picture to bucket, change filePath to upload different pic
 // Service account named: "AppUpload" is the one with the credentials to do this
 // sharkcamapp-fb6a8b29b514.json is the private key for google authentification for the AppUpload account, do not touch
 // Sources: https://shell.cloud.google.com/?page=editor&pli=1&show=ide%2Cterminal

@@ -6,7 +6,7 @@
 //////////////////////////////////Test Code/////////////////////////////////////////
 // Navigate between screens: https://reactnavigation.org/docs/navigating
 // In App.js in a new project
-
+/*
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -48,14 +48,19 @@ function App() {
 }
 
 export default App;
-
+*/
 /////////////////////////////////OLD CODE///////////////////////////////////////////
-/*
+
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
 import { useState } from 'react';
+import { shareAsync } from 'expo-sharing'
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Image } from 'react-native'
+import * as FileSystem from 'expo-file-system';
+import { Google } from 'expo-google-app-auth';
+import { google } from 'googleapis';
+import { Storage } from 'google-cloud/storage';
 
 export default function App() {
   const [type, setType] = useState(CameraType.back);
@@ -71,7 +76,7 @@ export default function App() {
     // Camera permissions are not granted yet
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+        <Text style={{ textAlign: 'center' }}>We need your permission to access the camera</Text>
         <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
@@ -90,7 +95,8 @@ export default function App() {
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={async () => {
             if (cameraRef) {
-              var photo = await cameraRef.takePictureAsync();
+              const photo = await cameraRef.takePictureAsync();
+              //await uploadToCloud(photo.uri)
               console.log(photo.uri);
             }
           }}>
@@ -130,4 +136,3 @@ const styles = StyleSheet.create({
 });
 
 
-*/

@@ -17,15 +17,15 @@ const storage = new Storage({
 });
 
 async function FileUpload(bucketName, filePath, destFileName, generationMatchPrecondition) {
-    const options = {
+    const uploadOptions = {
         destination: destFileName,
         preconditionOpts: { ifGenerationMatch: generationMatchPrecondition },
     };
-    await storage.bucket(bucketName).upload(filePath, options); // the actual uploading happens here
+    await storage.bucket(bucketName).upload(filePath, uploadOptions); // the actual uploading happens here
     console.log(`${filePath} uploaded to ${bucketName}`);
 }
 
-function main() { // needs 3 inputs to be given for upload
+function main() { // needs 4 inputs to be given for upload
     const bucketName = 'seniordesignbucket';
     const filePath = './pics2test/beetle.jpg'; // name before
     const destFileName = 'cloudbeetle.png'; // name after

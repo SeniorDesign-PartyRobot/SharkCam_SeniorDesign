@@ -16,7 +16,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { useState } from 'react';
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
-import * as Font from 'expo-font';
+import { useRoute } from '@react-navigation/native';
 
 ///////////////////// Styling //////////////////
 const styles = StyleSheet.create({
@@ -87,7 +87,11 @@ const styles = StyleSheet.create({
 
 /////////////////// Home Screen ////////////////////////
 // get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation, route }) {
+  // Need to pass values from settings to home, home to camera screen
+  if (route.params) {
+    console.log("values passed from first page: ", route.params.isEnabled);
+  }
   return (
     <View style={styles.genericContainer}>
       <View style={styles.homeButtonContainer}>
@@ -96,7 +100,9 @@ function HomeScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.homeButtonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('CameraScreen')}>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('CameraScreen', {});
+        }}>
           <Text style={styles.homeButtonText}>{"Camera"}</Text>
         </TouchableOpacity>
       </View>
@@ -113,7 +119,6 @@ function HomeScreen({ navigation }) {
 }
 ////////////////// Robot Controls /////////////////////////////
 function sendMsg(input) {
-  console.log("button clicked!");
   try {
     console.log(input);
     ws.send(input);
@@ -123,7 +128,7 @@ function sendMsg(input) {
 
 };
 
-function RobotControls() {
+function RobotControls({ navigation }) {
   //////////// camera delay code //////////////
   var delay = 10; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
@@ -147,7 +152,6 @@ function RobotControls() {
           <Text style={styles.settingsButtonText}>{"Start Robot"}</Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={() => sendMsg('stop')}>
           <Text style={styles.settingsButtonText}>{"Stop Robot"}</Text>
@@ -178,18 +182,21 @@ function RobotControls() {
         >
         </SelectList>
       </View>
+      <View style={styles.homeButtonContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home', { isEnabled: isEnabled })}>
+          <Text style={styles.settingsButtonText}>{"Apply Changes"}</Text>
+        </TouchableOpacity>
+      </View>
     </View >
   );
 };
 
 ///////////////// Camera Screen /////////////////////////
-function CameraScreen() {
+function CameraScreen({ navigation, enabled }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [cameraRef, setCameraRef] = useState(null);
   const [enabledRef, setEnabledRef] = useState(false);
-
-  var enabled = true;
 
   function autoCaptureOnOff(enabled) {
 
@@ -226,15 +233,6 @@ function CameraScreen() {
             <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={async () => {
-            // autoCaptureOnOff(enabled);
-            // if (!enabledRef) setEnabledRef(true);
-            // console.log("enabled ref: ", enabledRef);
-            // while (enabledRef && cameraRef) {
-            //   setInterval(() => {
-            //     //var photo = await cameraRef.takePictureAsync();
-            //     console.log("Auto capture URI: ");
-            //   }, 1000);
-            // }
             async function autoPhotoCapture() {
               var photo = await cameraRef.takePictureAsync();
               console.log("Auto capture URI: ", photo.uri);
@@ -254,10 +252,11 @@ function CameraScreen() {
               var photo = await cameraRef.takePictureAsync();
               console.log(photo.uri);
             }
-            //console.log("Camera ref: ", cameraRef);
           }}>
             <Text style={styles.text}>Take Photo</Text>
-
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RobotControls')}>
+            <Text style={styles.text}>Settings</Text>
           </TouchableOpacity>
         </View>
       </Camera >

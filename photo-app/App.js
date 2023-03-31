@@ -16,30 +16,111 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { useState } from 'react';
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
-import { Image } from 'react-native'
+import * as Font from 'expo-font';
 
+///////////////////// Styling //////////////////
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#01A39E'
+  },
+  camera: {
+    flex: 1,
+  },
+  button: {
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#FFFFFF'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
 
+  },
+  homeButtonContainer: {
+    flexDirection: 'column',
+    backgroundColor: '#87e0de',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderRadius: 10,
+    margin: 10
+  },
+  cameraButtonContainer: {
+    flex: .9,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  homeButtonText: {
+    fontSize: 36,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase"
+  },
+  settingsButtonText: {
+    fontSize: 24,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase"
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    alignItems: 'center'
+  },
+  genericContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#01A39E",
+  }
+});
 
 /////////////////// Home Screen ////////////////////////
+// get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'top' }}>
-      <Text>Home </Text>
-      <Button
-        title="Robot Controls"
-        onPress={() => navigation.navigate('RobotControls')}
-      />
-      <Button
-        title="Camera"
-        onPress={() => navigation.navigate('CameraScreen')}
-      />
+    <View style={styles.genericContainer}>
+      <View style={styles.homeButtonContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('RobotControls')}>
+          <Text style={styles.homeButtonText}>{"Settings"}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.homeButtonContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('CameraScreen')}>
+          <Text style={styles.homeButtonText}>{"Camera"}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.homeButtonContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('PhotoScreen')}>
+          <Text style={styles.homeButtonText}>{"Photo Viewer"}</Text>
+        </TouchableOpacity>
+
+
+      </View>
+
     </View>
   );
 }
 ////////////////// Robot Controls /////////////////////////////
-function sendMsg() {
+function sendMsg(input) {
   console.log("button clicked!");
-  ws.send('hello!');
+  try {
+    console.log(input);
+    ws.send(input);
+  } catch {
+    console.log("Message could not be sent");
+  }
+
 };
 
 function RobotControls() {
@@ -51,7 +132,8 @@ function RobotControls() {
     { key: '2', value: '15 Seconds' },
     { key: '3', value: '30 Seconds' },
   ]
-  delay = parseInt(selected); // selected from dropdown menu
+  delay = parseInt(selected); // int version of selected from dropdown menu
+
   /////////////// auto capture code ///////////////
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => {
@@ -59,25 +141,44 @@ function RobotControls() {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Robot Controls</Text>
-      <Button
-        title="Say hello!"
-        onPress={() => sendMsg()}
-      />
-      <Text> Auto Capture </Text>
-      <Switch
-        trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-        onValueChange={toggleSwitch}
-        value={isEnabled} />
-      <Text> Delay </Text>
-      <SelectList
-        setSelected={(delay) => setSelected(delay)}
-        data={data}
-        save="value"
-      />
-    </View>
+    <View style={styles.genericContainer}>
+      <View style={styles.homeButtonContainer}>
+        <TouchableOpacity onPress={() => sendMsg('start')}>
+          <Text style={styles.settingsButtonText}>{"Start Robot"}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.homeButtonContainer}>
+        <TouchableOpacity onPress={() => sendMsg('stop')}>
+          <Text style={styles.settingsButtonText}>{"Stop Robot"}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.homeButtonContainer}>
+        <View style={styles.buttonContainer}>
+          <Text style={styles.settingsButtonText}>{"Autocapture Enable"}</Text>
+          <Switch
+            trackColor={{ false: '#63fa05', true: '#54f542' }}
+            thumbColor={isEnabled ? '#fff' : '#545353'}
+            onValueChange={toggleSwitch}
+            value={isEnabled}>
+          </Switch>
+        </View>
+      </View>
+      <View style={styles.homeButtonContainer}>
+        <Text style={styles.settingsButtonText}>{"Autocapture Delay"}
+        </Text>
+        <SelectList
+          boxStyles={{ backgroundColor: "#87e0de", borderRadius: 0, }}
+          dropdownStyles={{ backgroundColor: "#87e0de" }}
+          search={false}
+          setSelected={(delay) => setSelected(delay)}
+          data={data}
+          save="value"
+          color="#fff"
+        >
+        </SelectList>
+      </View>
+    </View >
   );
 };
 
@@ -109,9 +210,9 @@ function CameraScreen() {
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={(ref) => { setCameraRef(ref); }}>
-        <View style={styles.buttonContainer}>
+        <View style={styles.cameraButtonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>flip</Text>
+            <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={async () => {
             if (cameraRef) {
@@ -119,41 +220,23 @@ function CameraScreen() {
               console.log(photo.uri);
             }
           }}>
-            <Text style={styles.text}>take photo</Text>
+            <Text style={styles.text}>Take Photo</Text>
 
           </TouchableOpacity>
         </View>
       </Camera>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});
-
+//////////////Photo display screen ////////////////////
+function PhotoScreen() {
+  return (
+    <View style={styles.genericContainer}>
+      <Text style={styles.text}>Link to photos displayed here!</Text>
+    </View>
+  );
+};
 
 ///////////////// Main //////////////////////////
 // inits are here because I'm tired
@@ -173,96 +256,15 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="RobotControls" component={RobotControls} />
         <Stack.Screen name="CameraScreen" component={CameraScreen} />
+        <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer >
   );
 }
 
 export default App;
 
-/////////////////////////////////OLD CODE///////////////////////////////////////////
-/*
-import { CameraType } from 'expo-camera';
-import { Camera } from 'expo-camera';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Image } from 'react-native'
-
-export default function App() {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-  const [cameraRef, setCameraRef] = useState(null);
-
-  if (!permission) {
-    // Camera permissions are still loading
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
-
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  }
-
-  return (
-    <View style={styles.container}>
-      <Camera style={styles.camera} type={type} ref={(ref) => { setCameraRef(ref); }}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>flip</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={async () => {
-            if (cameraRef) {
-              var photo = await cameraRef.takePictureAsync();
-              console.log(photo.uri);
-            }
-          }}>
-            <Text style={styles.text}>take photo</Text>
-
-          </TouchableOpacity>
-        </View>
-      </Camera>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});
-
-
-*/

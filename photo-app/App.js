@@ -9,14 +9,14 @@
 
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, Switch, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
-import { useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 ///////////////////// Styling //////////////////
 const styles = StyleSheet.create({
@@ -88,10 +88,22 @@ const styles = StyleSheet.create({
 /////////////////// Home Screen ////////////////////////
 // get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
 function HomeScreen({ navigation, route }) {
-  // Need to pass values from settings to home, home to camera screen
-  if (route.params) {
-    console.log("values passed from first page: ", route.params.isEnabled);
+  // retrieve data function
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@enableKey')
+      return value;
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
+    }
   }
+  useFocusEffect(() => {
+    value = getData(); // get data on home screen nav
+    console.log("Stored Data: ", value); // why does stored data value change?
+  });
   return (
     <View style={styles.genericContainer}>
       <View style={styles.homeButtonContainer}>
@@ -129,6 +141,17 @@ function sendMsg(input) {
 };
 
 function RobotControls({ navigation }) {
+
+  // store data function
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('@enableKey', value);
+      console.log("data stored");
+    } catch (e) {
+      // saving error
+    }
+  }
+
   //////////// camera delay code //////////////
   var delay = 10; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
@@ -183,7 +206,12 @@ function RobotControls({ navigation }) {
         </SelectList>
       </View>
       <View style={styles.homeButtonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home', { isEnabled: isEnabled })}>
+        <TouchableOpacity onPress={async () => {
+          var stringIsEnabled = String(isEnabled);
+          console.log("is enabled: ", stringIsEnabled);
+          await storeData(stringIsEnabled);
+          navigation.navigate('Home')
+        }}>
           <Text style={styles.settingsButtonText}>{"Apply Changes"}</Text>
         </TouchableOpacity>
       </View>

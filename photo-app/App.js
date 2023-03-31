@@ -187,6 +187,17 @@ function CameraScreen() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [cameraRef, setCameraRef] = useState(null);
+  const [enabledRef, setEnabledRef] = useState(false);
+
+  var enabled = true;
+
+  function autoCaptureOnOff(enabled) {
+
+    if (enabled) {
+      setEnabledRef(true);
+    }
+
+  }
 
   if (!permission) {
     // Camera permissions are still loading
@@ -215,17 +226,42 @@ function CameraScreen() {
             <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={async () => {
-            if (cameraRef) {
+            // autoCaptureOnOff(enabled);
+            // if (!enabledRef) setEnabledRef(true);
+            // console.log("enabled ref: ", enabledRef);
+            // while (enabledRef && cameraRef) {
+            //   setInterval(() => {
+            //     //var photo = await cameraRef.takePictureAsync();
+            //     console.log("Auto capture URI: ");
+            //   }, 1000);
+            // }
+            async function autoPhotoCapture() {
+              var photo = await cameraRef.takePictureAsync();
+              console.log("Auto capture URI: ", photo.uri);
+            }
+            autoCaptureOnOff(enabled);
+            if (enabledRef) {
+              var photoIntervalID = setInterval(autoPhotoCapture, 2000); // use clearInterval(photoInvervalID) to stop interval
+            }
+            if (!enabledRef) {
+              try {
+                clearInterval(photoIntervalID);
+              } catch (error) {
+                console.log(error);
+              }
+            }
+            if (cameraRef && !enabledRef) {
               var photo = await cameraRef.takePictureAsync();
               console.log(photo.uri);
             }
+            //console.log("Camera ref: ", cameraRef);
           }}>
             <Text style={styles.text}>Take Photo</Text>
 
           </TouchableOpacity>
         </View>
-      </Camera>
-    </View>
+      </Camera >
+    </View >
   );
 };
 

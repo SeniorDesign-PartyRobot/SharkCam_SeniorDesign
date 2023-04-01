@@ -87,18 +87,30 @@ const styles = StyleSheet.create({
   }
 });
 
+// generic getData
+const getData = async (key) => {
+  try {
+    value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      // value previously stored
+    }
+  } catch (e) {
+    // error reading value
+  }
+}
+
 /////////////////// Home Screen ////////////////////////
 // get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
 function HomeScreen({ navigation, route }) {
   // retrieve settings data
   const [outerValue, setOuterValue] = useState(null);
+  // specialized getData for setting settings on front end
   const getData = async () => {
     try {
       value = await AsyncStorage.getItem('@stringSettingsObj');
 
       if (value !== null) {
         // value previously stored
-        console.log("Value: ", JSON.parse(value));
         setOuterValue(value);
       }
     } catch (e) {
@@ -107,7 +119,6 @@ function HomeScreen({ navigation, route }) {
   }
   useFocusEffect(() => {
     getData();
-    console.log("Stored Data: ", outerValue); // why does this read previous value? Is it because it loads before getData?
   });
 
   return (
@@ -152,15 +163,27 @@ function RobotControls({ navigation }) {
   const storeData = async (value) => {
     try {
       await AsyncStorage.setItem('@stringSettingsObj', value);
-      console.log("data stored");
     } catch (e) {
       // saving error
     }
   }
-
-  //////////// camera delay code //////////////
+  // init settings values
   var delay = null; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+  // get existing cache values, use to show current settings
+
+  useState(() => {
+    getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
+    const parsedSettings = JSON.parse(value);
+    console.log(parsedSettings);
+    setSelected(parsedSettings.selectedKey);
+    setIsEnabled(parsedSettings.isEnabledKey);
+  });
+
+
+  //////////// camera delay selection code //////////////
+
   const data = [
     { key: '1', value: '10 Seconds' },
     { key: '2', value: '15 Seconds' },
@@ -169,7 +192,7 @@ function RobotControls({ navigation }) {
   delay = parseInt(selected); // int version of selected from dropdown menu
 
   /////////////// auto capture code ///////////////
-  const [isEnabled, setIsEnabled] = useState(false);
+
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState);
   };
@@ -210,7 +233,7 @@ function RobotControls({ navigation }) {
           boxStyles={{ backgroundColor: "#87e0de", borderRadius: 0, }}
           dropdownStyles={{ backgroundColor: "#87e0de" }}
           search={false}
-          setSelected={(delay) => setSelected(delay)}
+          setSelected={(selected) => setSelected(selected)}
           data={data}
           save="value"
           color="#fff"
@@ -231,19 +254,22 @@ function RobotControls({ navigation }) {
 };
 
 ///////////////// Camera Screen /////////////////////////
-function CameraScreen({ navigation, enabled }) {
+function CameraScreen({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [cameraRef, setCameraRef] = useState(null);
-  const [enabledRef, setEnabledRef] = useState(false);
 
-  function autoCaptureOnOff(enabled) {
+  // hooks have to be above return statements
+  const [delay, setDelay] = useState();
+  const [enabled, setEnabled] = useState();
 
-    if (enabled) {
-      setEnabledRef(true);
-    }
-
-  }
+  useEffect(() => {
+    getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
+    let parsedValue = JSON.parse(value);
+    setDelay(parseInt(parsedValue.selectedKey));
+    setEnabled(parsedValue.isEnabledKey);
+    console.log("Delay, Enabled: ", delay, enabled);
+  });
 
   if (!permission) {
     // Camera permissions are still loading
@@ -276,22 +302,22 @@ function CameraScreen({ navigation, enabled }) {
               var photo = await cameraRef.takePictureAsync();
               console.log("Auto capture URI: ", photo.uri);
             }
-            autoCaptureOnOff(enabled);
-            if (enabledRef) {
-              var photoIntervalID = setInterval(autoPhotoCapture, 2000); // use clearInterval(photoInvervalID) to stop interval
+
+            if (enabled) {
+              var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
             }
-            if (!enabledRef) {
+            if (!enabled) {
               try {
                 clearInterval(photoIntervalID);
               } catch (error) {
                 console.log(error);
               }
             }
-            if (cameraRef && !enabledRef) {
+            if (cameraRef && !enabled) {
               var photo = await cameraRef.takePictureAsync();
               const uri = photo.uri
               console.log(photo.uri);
-              uploadImage(uri);
+              //uploadImage(uri);
             }
           }}>
             <Text style={styles.text}>Take Photo</Text>

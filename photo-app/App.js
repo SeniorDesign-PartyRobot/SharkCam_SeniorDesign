@@ -94,11 +94,11 @@ function HomeScreen({ navigation, route }) {
   const [outerValue, setOuterValue] = useState(null);
   const getData = async () => {
     try {
-      value = await AsyncStorage.getItem('@enableKey');
+      value = await AsyncStorage.getItem('@stringSettingsObj');
 
       if (value !== null) {
         // value previously stored
-        console.log("Value: ", value);
+        console.log("Value: ", JSON.parse(value));
         setOuterValue(value);
       }
     } catch (e) {
@@ -151,7 +151,7 @@ function RobotControls({ navigation }) {
   // store data function
   const storeData = async (value) => {
     try {
-      await AsyncStorage.setItem('@enableKey', value);
+      await AsyncStorage.setItem('@stringSettingsObj', value);
       console.log("data stored");
     } catch (e) {
       // saving error
@@ -176,7 +176,8 @@ function RobotControls({ navigation }) {
 
   // settings object
   let settingsObj = {
-
+    selectedKey: selected,
+    isEnabledKey: isEnabled
   }
 
   return (
@@ -218,8 +219,8 @@ function RobotControls({ navigation }) {
       </View>
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={async () => {
-          var stringIsEnabled = String(isEnabled);
-          await storeData(stringIsEnabled);
+          var stringSettingsObj = JSON.stringify(settingsObj);
+          await storeData(stringSettingsObj);
           navigation.navigate('Home')
         }}>
           <Text style={styles.settingsButtonText}>{"Apply Changes"}</Text>

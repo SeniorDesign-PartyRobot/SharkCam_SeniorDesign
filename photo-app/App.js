@@ -297,6 +297,24 @@ function CameraScreen({ navigation, enabled }) {
   );
 };
 
+/////////////////Cloud Upload////////////////////
+
+const uploadImage = async (uri) => {
+  const filename = uri.substring(uri.lastIndexOf('/') + 1);
+  const uploadUri = uri.replace('file://', '');
+
+  // Fetch the file contents and convert to a Blob
+  const response = await fetch(uploadUri);
+  const blob = await response.blob();
+
+  const timestamp = Date.now();
+  const imageName = `my-image-${timestamp}.jpg`;
+  const storageRef = ref(storage, imageName);
+  const uploadTask = uploadBytesResumable(storageRef, blob);
+
+  console.log("Photo Upload to firebase");
+};
+
 //////////////Photo display screen ////////////////////
 function PhotoScreen() {
   return (
@@ -304,53 +322,34 @@ function PhotoScreen() {
       <Text style={styles.text}>Link to photos displayed here!</Text>
     </View>
   );
+}
 
-  /////////////////Cloud Upload////////////////////
+///////////////// Main //////////////////////////
+// inits are here because I'm tired
+const Stack = createNativeStackNavigator();
+const WS_URL = 'ws://192.168.8.207:8080';
+const ws = new WebSocket(WS_URL);
 
-  const uploadImage = async (uri) => {
-    const filename = uri.substring(uri.lastIndexOf('/') + 1);
-    const uploadUri = uri.replace('file://', '');
+function App() {
 
-    // Fetch the file contents and convert to a Blob
-    const response = await fetch(uploadUri);
-    const blob = await response.blob();
-
-    const timestamp = Date.now();
-    const imageName = `my-image-${timestamp}.jpg`;
-    const storageRef = ref(storage, imageName);
-    const uploadTask = uploadBytesResumable(storageRef, blob);
-
-    console.log("Photo Upload to firebase");
-  };
-
-
-  ///////////////// Main //////////////////////////
-  // inits are here because I'm tired
-  const Stack = createNativeStackNavigator();
-  const WS_URL = 'ws://192.168.8.207:8080';
-  const ws = new WebSocket(WS_URL);
-
-  function App() {
-
-    ws.onopen = () => {
-      console.log('connected');
-    }
-
-    ws.onmessage = (data) => {
-      console.log(data);
-    }
-
-    return (
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="RobotControls" component={RobotControls} />
-          <Stack.Screen name="CameraScreen" component={CameraScreen} />
-          <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
-        </Stack.Navigator>
-      </NavigationContainer >
-    );
+  ws.onopen = () => {
+    console.log('connected');
   }
 
-  export default App;
+  ws.onmessage = (data) => {
+    console.log(data);
+  }
 
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="RobotControls" component={RobotControls} />
+        <Stack.Screen name="CameraScreen" component={CameraScreen} />
+        <Stack.Screen name="PhotoScreen" component={PhotoScreen} />
+      </Stack.Navigator>
+    </NavigationContainer >
+  );
+}
+
+export default App;

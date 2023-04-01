@@ -16,7 +16,6 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
-import { Image } from 'react-native';
 import { storage } from "./firebase_setup.js";
 import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -92,13 +91,15 @@ const styles = StyleSheet.create({
 // get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
 function HomeScreen({ navigation, route }) {
   // retrieve settings data
-  var value = null;
+  const [outerValue, setOuterValue] = useState(null);
   const getData = async () => {
     try {
-      value = await AsyncStorage.getItem('@enableKey')
+      value = await AsyncStorage.getItem('@enableKey');
+
       if (value !== null) {
         // value previously stored
-        //console.log("Value in function: ", value);
+        console.log("Value: ", value);
+        setOuterValue(value);
       }
     } catch (e) {
       // error reading value
@@ -106,8 +107,9 @@ function HomeScreen({ navigation, route }) {
   }
   useFocusEffect(() => {
     getData();
-    console.log("Stored Data: ", value);
+    console.log("Stored Data: ", outerValue); // why does this read previous value? Is it because it loads before getData?
   });
+
   return (
     <View style={styles.genericContainer}>
       <View style={styles.homeButtonContainer}>

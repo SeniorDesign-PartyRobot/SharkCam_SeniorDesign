@@ -16,6 +16,9 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
+import { Image } from 'react-native';
+import { storage } from "./firebase_setup.js";
+import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 ///////////////////// Styling //////////////////
@@ -283,7 +286,9 @@ function CameraScreen({ navigation, enabled }) {
             }
             if (cameraRef && !enabledRef) {
               var photo = await cameraRef.takePictureAsync();
+              const uri = photo.uri
               console.log(photo.uri);
+              uploadImage(uri);
             }
           }}>
             <Text style={styles.text}>Take Photo</Text>
@@ -297,6 +302,24 @@ function CameraScreen({ navigation, enabled }) {
   );
 };
 
+/////////////////Cloud Upload////////////////////
+
+const uploadImage = async (uri) => {
+  const filename = uri.substring(uri.lastIndexOf('/') + 1);
+  const uploadUri = uri.replace('file://', '');
+
+  // Fetch the file contents and convert to a Blob
+  const response = await fetch(uploadUri);
+  const blob = await response.blob();
+
+  const timestamp = Date.now();
+  const imageName = `my-image-${timestamp}.jpg`;
+  const storageRef = ref(storage, imageName);
+  const uploadTask = uploadBytesResumable(storageRef, blob);
+
+  console.log("Photo Upload to firebase");
+};
+
 //////////////Photo display screen ////////////////////
 function PhotoScreen() {
   return (
@@ -304,7 +327,7 @@ function PhotoScreen() {
       <Text style={styles.text}>Link to photos displayed here!</Text>
     </View>
   );
-};
+}
 
 ///////////////// Main //////////////////////////
 // inits are here because I'm tired
@@ -335,4 +358,3 @@ function App() {
 }
 
 export default App;
-

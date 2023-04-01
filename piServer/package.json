@@ -1,0 +1,17 @@
+{
+  "name": "piserver",
+  "version": "1.0.0",
+  "description": "Pi server for shark camera app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "react-native-tcp-socket": "^6.0.6",
+    "ws": "^8.13.0"
+  }
+}

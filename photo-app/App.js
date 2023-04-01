@@ -88,21 +88,22 @@ const styles = StyleSheet.create({
 /////////////////// Home Screen ////////////////////////
 // get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
 function HomeScreen({ navigation, route }) {
-  // retrieve data function
+  // retrieve settings data
+  var value = null;
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('@enableKey')
-      return value;
+      value = await AsyncStorage.getItem('@enableKey')
       if (value !== null) {
         // value previously stored
+        //console.log("Value in function: ", value);
       }
     } catch (e) {
       // error reading value
     }
   }
   useFocusEffect(() => {
-    value = getData(); // get data on home screen nav
-    console.log("Stored Data: ", value); // why does stored data value change?
+    getData();
+    console.log("Stored Data: ", value);
   });
   return (
     <View style={styles.genericContainer}>
@@ -153,7 +154,7 @@ function RobotControls({ navigation }) {
   }
 
   //////////// camera delay code //////////////
-  var delay = 10; // default delay, even if not shown on drop down
+  var delay = null; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
   const data = [
     { key: '1', value: '10 Seconds' },
@@ -167,6 +168,11 @@ function RobotControls({ navigation }) {
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState);
   };
+
+  // settings object
+  let settingsObj = {
+
+  }
 
   return (
     <View style={styles.genericContainer}>
@@ -208,7 +214,6 @@ function RobotControls({ navigation }) {
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={async () => {
           var stringIsEnabled = String(isEnabled);
-          console.log("is enabled: ", stringIsEnabled);
           await storeData(stringIsEnabled);
           navigation.navigate('Home')
         }}>

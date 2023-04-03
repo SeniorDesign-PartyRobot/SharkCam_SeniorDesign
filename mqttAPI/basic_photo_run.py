@@ -20,12 +20,6 @@ def dock_robot():
         mqtt_client.dock()
         time.sleep(1)
 
-# def clean_NO_VAC():
-#     while mqtt_client.is_cleaning() == False:
-#         mqtt_client.set_fan_speed(0)
-#         mqtt_client.clean()
-#         time.sleep(1)
-
 def move_robot_off_dock_NO_VAC():
      if mqtt_client.is_docked():
         mqtt_client.clean()

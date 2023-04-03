@@ -16,7 +16,6 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { useState, useEffect } from 'react';
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
-import { Image } from 'react-native';
 import { storage } from "./firebase_setup.js";
 import { uploadBytesResumable, ref, getDownloadURL, listAll } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -94,25 +93,49 @@ const styles = StyleSheet.create({
   }
 });
 
+// generic getData
+const getData = async (key) => {
+  try {
+    value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      // value previously stored
+    }
+  } catch (e) {
+    // error reading value
+  }
+}
+
+// generic storeData
+const storeData = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (e) {
+    // saving error
+  }
+}
+
 /////////////////// Home Screen ////////////////////////
 // get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
 function HomeScreen({ navigation, route }) {
-  // retrieve data function
+  // retrieve settings data
+  const [outerValue, setOuterValue] = useState(null);
+  // specialized getData for setting settings on front end
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('@enableKey')
-      return value;
+      value = await AsyncStorage.getItem('@stringSettingsObj');
+
       if (value !== null) {
         // value previously stored
+        setOuterValue(value);
       }
     } catch (e) {
       // error reading value
     }
   }
   useFocusEffect(() => {
-    value = getData(); // get data on home screen nav
-    console.log("Stored Data: ", value); // why does stored data value change?
+    getData();
   });
+
   return (
     <View style={styles.genericContainer}>
       <View style={styles.homeButtonContainer}>
@@ -151,31 +174,47 @@ function sendMsg(input) {
 
 function RobotControls({ navigation }) {
 
-  // store data function
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem('@enableKey', value);
-      console.log("data stored");
-    } catch (e) {
-      // saving error
-    }
-  }
-
-  //////////// camera delay code //////////////
-  var delay = 10; // default delay, even if not shown on drop down
+  // init settings values
+  var delay = null; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+  // get existing cache values, use to show current settings
+
+  useState(() => {
+    getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
+    const parsedSettings = JSON.parse(value);
+    console.log("Parsed settings: ", parsedSettings);
+    setSelected(parsedSettings.selectedKey);
+    setIsEnabled(parsedSettings.isEnabledKey);
+  });
+
+
+  //////////// camera delay selection code //////////////
+  delay = 10;
   const data = [
     { key: '1', value: '10 Seconds' },
     { key: '2', value: '15 Seconds' },
     { key: '3', value: '30 Seconds' },
   ]
+  if (selected == undefined) {
+    setSelected(10); // default delay
+  }
+  if (isEnabled == undefined) { // default auto photo
+    setIsEnabled(false);
+  }
   delay = parseInt(selected); // int version of selected from dropdown menu
 
   /////////////// auto capture code ///////////////
-  const [isEnabled, setIsEnabled] = useState(false);
+
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState);
   };
+
+  // settings object
+  let settingsObj = {
+    selectedKey: selected,
+    isEnabledKey: isEnabled
+  }
 
   return (
     <View style={styles.genericContainer}>
@@ -207,7 +246,7 @@ function RobotControls({ navigation }) {
           boxStyles={{ backgroundColor: "#87e0de", borderRadius: 0, }}
           dropdownStyles={{ backgroundColor: "#87e0de" }}
           search={false}
-          setSelected={(delay) => setSelected(delay)}
+          setSelected={(selected) => setSelected(selected)}
           data={data}
           save="value"
           color="#fff"
@@ -216,9 +255,8 @@ function RobotControls({ navigation }) {
       </View>
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={async () => {
-          var stringIsEnabled = String(isEnabled);
-          console.log("is enabled: ", stringIsEnabled);
-          await storeData(stringIsEnabled);
+          var stringSettingsObj = JSON.stringify(settingsObj);
+          await storeData('@stringSettingsObj', stringSettingsObj);
           navigation.navigate('Home')
         }}>
           <Text style={styles.settingsButtonText}>{"Apply Changes"}</Text>
@@ -229,19 +267,38 @@ function RobotControls({ navigation }) {
 };
 
 ///////////////// Camera Screen /////////////////////////
-function CameraScreen({ navigation, enabled }) {
+function CameraScreen({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [cameraRef, setCameraRef] = useState(null);
-  const [enabledRef, setEnabledRef] = useState(false);
 
-  function autoCaptureOnOff(enabled) {
+  // hooks have to be above return statements
+  const [delay, setDelay] = useState();
+  const [enabled, setEnabled] = useState();
+  const [oldID, setOldID] = useState();
 
-    if (enabled) {
-      setEnabledRef(true);
-    }
 
+  useEffect(() => { // do I need to await? Yes. 
+    getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
+    let parsedValue = JSON.parse(value);
+    setDelay(parseInt(parsedValue.selectedKey));
+    setEnabled(parsedValue.isEnabledKey);
+    // getData('@photoIntervalID');
+    // console.log("Value: ", value);
+    // setOldID(value);
+    console.log("Delay, Enabled ", delay, enabled);
+  });
+
+
+
+
+  try {
+    clearInterval(oldID);
   }
+  catch {
+    console.log("Nothing to clear");
+  }
+
 
   if (!permission) {
     // Camera permissions are still loading
@@ -274,22 +331,25 @@ function CameraScreen({ navigation, enabled }) {
               var photo = await cameraRef.takePictureAsync();
               console.log("Auto capture URI: ", photo.uri);
             }
-            autoCaptureOnOff(enabled);
-            if (enabledRef) {
-              var photoIntervalID = setInterval(autoPhotoCapture, 2000); // use clearInterval(photoInvervalID) to stop interval
-            }
-            if (!enabledRef) {
+
+
+            var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
+            storeData('@photoIntervalID', String(photoIntervalID));
+
+            console.log("Current ID: ", photoIntervalID);
+
+            if (!enabled) {
               try {
                 clearInterval(photoIntervalID);
               } catch (error) {
-                console.log(error);
+                console.log("Error: ", error);
               }
             }
-            if (cameraRef && !enabledRef) {
+            if (cameraRef && !enabled) {
               var photo = await cameraRef.takePictureAsync();
               const uri = photo.uri
               console.log(photo.uri);
-              uploadImage(uri);
+              //uploadImage(uri);
             }
           }}>
             <Text style={styles.text}>Take Photo</Text>

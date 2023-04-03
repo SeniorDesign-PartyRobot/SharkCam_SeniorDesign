@@ -8,7 +8,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, Switch, Alert, StyleSheet, TouchableOpacity } from 'react-native';
@@ -85,6 +85,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "#01A39E",
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    marginBottom: 20,
   }
 });
 
@@ -315,34 +321,40 @@ const uploadImage = async (uri) => {
   console.log("Photo Upload to firebase");
 };
 
+/////////cemetery////////
+
+/*
+// Find all the prefixes and items.
+listAll(listRef).then((results) => {
+  results.items.forEach((itemRef) => {
+    content2display(itemRef);
+    // All the items under listRef.
+  });
+}).catch((error) => {
+  console.log(error)
+});
+
+
+
+function content2display(itemRef) {
+  //itemRef.getDownloadURL().then()
+  console.log(itemRef)
+  getDownloadURL(itemRef)
+
+};*/
+
+
 ////////////////Cloud List all Images/////////////////
 //https://firebase.google.com/docs/storage/web/list-files
 //https://stackoverflow.com/questions/37335102/how-to-get-a-list-of-all-files-in-cloud-storage-in-a-firebase-app
 
 const ListImagesInBucket = async () => {
   // Create a reference under which you want to list
-  const listRef = ref(storage, 'TestingListFolder/');
+  const imageDir = ''; //hardcoded for now
+  const listRef = ref(storage, imageDir);
   const results = await listAll(listRef);
-  const item_list = results.items.map((itemRef) => itemRef.name);
-
+  const item_list = await Promise.all(results.items.map((itemRef) => getDownloadURL(itemRef)));
   return item_list;
-  /*
-  // Find all the prefixes and items.
-  listAll(listRef).then((results) => {
-    results.items.forEach((itemRef) => {
-      content2display(itemRef);
-      // All the items under listRef.
-    });
-  }).catch((error) => {
-    console.log(error)
-  });
-
-
-
-  function content2display(itemRef) {
-    //itemRef.getDownloadURL().then()
-    console.log(itemRef.name)
-  }; */
 }
 
 
@@ -350,18 +362,21 @@ const ListImagesInBucket = async () => {
 function PhotoScreen() {
   const [imageList, setImageList] = useState([]);
 
-  const handlePress = async () => {
+  const displayImages = async () => {
     const list = await ListImagesInBucket();
     setImageList(list);
+    console.log('printed images')
   };
 
   return (
     <View style={styles.genericContainer}>
       <Text style={styles.text}>List of images:</Text>
-      {imageList.map((imageName, index) => (
-        <Text key={index}>{imageName}</Text>
-      ))}
-      <Button title="List Images" onPress={handlePress} />
+      <ScrollView>
+        {imageList.map((imageUrl, index) => (
+          <Image key={index} source={{ uri: imageUrl }} style={styles.image} />
+        ))}
+      </ScrollView>
+      <Button title="List Images" onPress={displayImages} />
     </View>
   );
 }

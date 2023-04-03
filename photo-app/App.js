@@ -99,6 +99,15 @@ const getData = async (key) => {
   }
 }
 
+// generic storeData
+const storeData = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (e) {
+    // saving error
+  }
+}
+
 /////////////////// Home Screen ////////////////////////
 // get data between screens: https://www.geeksforgeeks.org/how-to-pass-value-between-screens-in-react-native/
 function HomeScreen({ navigation, route }) {
@@ -159,14 +168,6 @@ function sendMsg(input) {
 
 function RobotControls({ navigation }) {
 
-  // store data function
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem('@stringSettingsObj', value);
-    } catch (e) {
-      // saving error
-    }
-  }
   // init settings values
   var delay = null; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
@@ -176,19 +177,25 @@ function RobotControls({ navigation }) {
   useState(() => {
     getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
     const parsedSettings = JSON.parse(value);
-    console.log(parsedSettings);
+    console.log("Parsed settings: ", parsedSettings);
     setSelected(parsedSettings.selectedKey);
     setIsEnabled(parsedSettings.isEnabledKey);
   });
 
 
   //////////// camera delay selection code //////////////
-
+  delay = 10;
   const data = [
     { key: '1', value: '10 Seconds' },
     { key: '2', value: '15 Seconds' },
     { key: '3', value: '30 Seconds' },
   ]
+  if (selected == undefined) {
+    setSelected(10); // default delay
+  }
+  if (isEnabled == undefined) { // default auto photo
+    setIsEnabled(false);
+  }
   delay = parseInt(selected); // int version of selected from dropdown menu
 
   /////////////// auto capture code ///////////////
@@ -243,7 +250,7 @@ function RobotControls({ navigation }) {
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={async () => {
           var stringSettingsObj = JSON.stringify(settingsObj);
-          await storeData(stringSettingsObj);
+          await storeData('@stringSettingsObj', stringSettingsObj);
           navigation.navigate('Home')
         }}>
           <Text style={styles.settingsButtonText}>{"Apply Changes"}</Text>
@@ -262,14 +269,30 @@ function CameraScreen({ navigation }) {
   // hooks have to be above return statements
   const [delay, setDelay] = useState();
   const [enabled, setEnabled] = useState();
+  const [oldID, setOldID] = useState();
 
-  useEffect(() => {
+
+  useEffect(() => { // do I need to await? Yes. 
     getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
     let parsedValue = JSON.parse(value);
     setDelay(parseInt(parsedValue.selectedKey));
     setEnabled(parsedValue.isEnabledKey);
-    console.log("Delay, Enabled: ", delay, enabled);
+    // getData('@photoIntervalID');
+    // console.log("Value: ", value);
+    // setOldID(value);
+    console.log("Delay, Enabled ", delay, enabled);
   });
+
+
+
+
+  try {
+    clearInterval(oldID);
+  }
+  catch {
+    console.log("Nothing to clear");
+  }
+
 
   if (!permission) {
     // Camera permissions are still loading
@@ -303,14 +326,17 @@ function CameraScreen({ navigation }) {
               console.log("Auto capture URI: ", photo.uri);
             }
 
-            if (enabled) {
-              var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
-            }
+
+            var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
+            storeData('@photoIntervalID', String(photoIntervalID));
+
+            console.log("Current ID: ", photoIntervalID);
+
             if (!enabled) {
               try {
                 clearInterval(photoIntervalID);
               } catch (error) {
-                console.log(error);
+                console.log("Error: ", error);
               }
             }
             if (cameraRef && !enabled) {

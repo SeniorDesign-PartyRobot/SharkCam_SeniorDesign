@@ -5,8 +5,6 @@ import board
 import adafruit_vl53l4cd
 from common.python_mqtt.mqtt_client import MQTTClient
 
-robot_ip = "192.168.8.209"
-mqtt_client = MQTTClient(robot_ip)
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
@@ -42,14 +40,18 @@ def ranging():
         else:     
             detection.clear()
 
+def clean_robot():
+    while not mqtt_client.is_paused():
+        mqtt_client.pause()
+        time.sleep(1)    
 
 def pause_robot():
-    while mqtt_client.is_paused() == False:
+    while not mqtt_client.is_paused():
         mqtt_client.pause()
         time.sleep(1)
 
 def dock_robot():
-    while mqtt_client.is_docking() == False:
+    while not mqtt_client.is_docking():
         mqtt_client.dock()
         time.sleep(1)
 
@@ -68,6 +70,11 @@ def obstacle_avoidance():
 
 
 def basic_photo_run(capture_number, capture_interval):
+    global robot_ip
+    robot_ip = "192.168.8.209"
+    global mqtt_client
+    mqtt_client = MQTTClient(robot_ip)
+    
     capture_time = 5 # Amount of time robot pauses to capture
     
     move_robot_off_dock_NO_VAC()
@@ -81,12 +88,14 @@ def basic_photo_run(capture_number, capture_interval):
         time.sleep(capture_time)
         mqtt_client.resume()
     captureComplete.set()
+    dock_robot()
 
 
 if __name__ == "__main__":
     rangingProcess = multiprocessing.Process(target=ranging, daemon=False)
     rangingProcess.start()
     captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_number,capture_interval))
+    captureProcess.start()
     captureProcessPID = captureProcess.pid
 
     while not captureComplete.set():
@@ -97,5 +106,5 @@ if __name__ == "__main__":
         obstacle_avoidance()
         psutil.Process(pid=captureProcessPID).resume()
         print("resuming")
-
-    dock_robot()
+        if mqtt_client.is_docked():
+            continue

@@ -251,7 +251,7 @@ function RobotControls({ navigation }) {
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={async () => {
           var stringSettingsObj = JSON.stringify(settingsObj);
-          await storeData('@stringSettingsObj', stringSettingsObj);
+          await storeData('@stringSettingsObj', JSON.stringify(settingsObj));
           navigation.navigate('Home')
         }}>
           <Text style={styles.settingsButtonText}>{"Apply Changes"}</Text>
@@ -285,7 +285,12 @@ function CameraScreen({ navigation }) {
   var oldID = getID();
   getSettings();
 
-  console.log(delay, enabled);
+  // Clear old interval
+  //clearInterval(photoIntervalID);
+  useEffect(() => {
+    clearInterval(oldID);
+  })
+
 
   if (!permission) {
     // Camera permissions are still loading
@@ -319,18 +324,30 @@ function CameraScreen({ navigation }) {
               console.log("Auto capture URI: ", photo.uri);
             }
 
-
-            var photoIntervalID = setInterval(autoPhotoCapture, 5 * 1000); // use clearInterval(photoInvervalID) to stop interval
-            storeData('@photoIntervalID', String(photoIntervalID));
-            console.log("Current ID: ", photoIntervalID);
-
             if (!enabled) {
               try {
                 clearInterval(photoIntervalID);
+                clearInterval(oldID);
                 console.log("Interval cleared");
               } catch (error) {
-                console.log("Error: ", error);
+                console.log("clear interval error: ", error);
               }
+            } else {
+              try {
+                console.log("old id: ", oldID);
+                clearInterval(oldID); // oldID not clearing
+                var photoIntervalID = setInterval(autoPhotoCapture, 5 * 1000);
+                // use clearInterval(photoInvervalID) to stop interval
+                if (photoIntervalID) {
+                  console.log("store id: ", photoIntervalID);
+                  storeData('@photoIntervalID', String(photoIntervalID));
+                }
+                console.log("Current ID: ", photoIntervalID);
+                console.log("Old interval cleared");
+              } catch (error) {
+                throw error;
+              }
+
             }
             if (cameraRef && !enabled) {
               var photo = await cameraRef.takePictureAsync();

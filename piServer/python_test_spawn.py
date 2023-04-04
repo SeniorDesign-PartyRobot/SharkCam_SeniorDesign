@@ -2,4 +2,4 @@ import sys
 
 data = "python process spawned"
 print(data)
-sys.stdout.flush()
+sys.stdout.write(data)

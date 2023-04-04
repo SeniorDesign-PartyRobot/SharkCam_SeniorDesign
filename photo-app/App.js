@@ -116,6 +116,7 @@ const getData = async (key) => {
 const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
+    console.log("Stored");
   } catch (e) {
     // saving error
   }
@@ -126,6 +127,7 @@ const storeData = async (key, value) => {
 function HomeScreen({ navigation, route }) {
   // retrieve settings data
   const [outerValue, setOuterValue] = useState(null);
+  const [oldID, setOldID] = useState();
   // specialized getData for setting settings on front end
   const getData = async () => {
     try {
@@ -137,11 +139,28 @@ function HomeScreen({ navigation, route }) {
       }
     } catch (e) {
       // error reading value
+      console.log("Home screen error: ", e);
+    }
+  }
+  const getOldID = async () => {
+    try {
+      value = await AsyncStorage.getItem('@photoIntervalID');
+
+      if (value !== null) {
+        // value previously stored
+        setOldID(value);
+      }
+    } catch (e) {
+      // error reading value
+      console.log("Home screen error: ", e);
     }
   }
   useFocusEffect(() => {
     getData();
+    getOldID();
   });
+  // Clear old interval
+  clearInterval(parseInt(oldID));
 
   return (
     <View style={styles.genericContainer}>
@@ -182,24 +201,24 @@ function sendMsg(input) {
 function RobotControls({ navigation }) {
 
   // init settings values
-  //var delay = null; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
   const [isEnabled, setIsEnabled] = useState(false);
   // get existing cache values, use to show current settings
 
-  useEffect(() => {
-    const getSettings = async () => {
-      const value = await AsyncStorage.getItem('@stringSettingsObj');
-      const parsedSettings = JSON.parse(value);
-      console.log("Parsed settings: ", parsedSettings);
-      if (parsedSettings?.selectedKey) {
-        setSelected(parsedSettings.selectedKey);
-        setIsEnabled(parsedSettings.isEnabledKey);
-      }
-
-    };
+  async function getSettings() {
+    try {
+      const settings = await AsyncStorage.getItem('@stringSettingsObj') // get existing data, use that for settings on initial load
+      var parsedSettings = JSON.parse(settings);
+      setSelected(parseInt(parsedSettings.selectedKey));
+      setIsEnabled(parsedSettings.isEnabledKey);
+      //console.log("Parsed settings: ", parsedSettings);
+    } catch (error) {
+      console.log("get settings error on settings page: ", error);
+    }
+  }
+  useState(() => {
     getSettings();
-  }, []);
+  });
 
   //////////// camera delay selection code //////////////
   delay = 10;
@@ -268,7 +287,7 @@ function RobotControls({ navigation }) {
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={async () => {
           var stringSettingsObj = JSON.stringify(settingsObj);
-          await storeData('@stringSettingsObj', stringSettingsObj);
+          await storeData('@stringSettingsObj', JSON.stringify(settingsObj));
           navigation.navigate('Home')
         }}>
           <Text style={styles.settingsButtonText}>{"Apply Changes"}</Text>
@@ -289,28 +308,39 @@ function CameraScreen({ navigation }) {
   const [enabled, setEnabled] = useState();
   const [oldID, setOldID] = useState();
 
+  async function getSettings() {
+    try {
+      const settings = await AsyncStorage.getItem('@stringSettingsObj') // get existing data, use that for settings on initial load
+      var parsedSettings = JSON.parse(settings);
+      setDelay(parseInt(parsedSettings.selectedKey));
+      setEnabled(parsedSettings.isEnabledKey);
+      //console.log("Parsed settings: ", parsedSettings);
+    } catch (error) {
+      console.log("get settings error: ", error);
+    }
 
+  }
+  async function getID() {
+    try {
+      const ID = await AsyncStorage.getItem('@photoIntervalID');
+      if (ID == undefined) {
+        ID = 0;
+      }
+      //console.log("old ID: ", ID);
+      setOldID(parseInt(ID));
+    } catch (error) {
+      console.log("get ID error: ", error);
+
+    }
+  }
+
+  getSettings();
+  getID();
+
+  // Clear old interval
   useEffect(() => {
-    const fetchData = async () => {
-      const value = await AsyncStorage.getItem('@stringSettingsObj'); // get existing data, use that for settings on initial load
-      let parsedValue = JSON.parse(value);
-      console.log("Parsed settings2: ", parsedValue);
-      const settingsEnabled = parsedValue.isEnabledKey
-      const settingsDelay = parsedValue.selectedKey
-      console.log("Delay, Enabled ", settingsDelay, settingsEnabled);
-
-    };
-    fetchData();
-  }, [value]);
-
-  const [value, setValue] = useState(null);
-
-  try {
-    clearInterval(oldID);
-  }
-  catch {
-    console.log("Nothing to clear");
-  }
+    clearInterval(parseInt(oldID));
+  })
 
 
   if (!permission) {
@@ -342,27 +372,46 @@ function CameraScreen({ navigation }) {
           <TouchableOpacity style={styles.button} onPress={async () => {
             async function autoPhotoCapture() {
               var photo = await cameraRef.takePictureAsync();
+              uploadImage(photo.uri); // comment out for testing
               console.log("Auto capture URI: ", photo.uri);
             }
 
-
-            var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
-            storeData('@photoIntervalID', String(photoIntervalID));
-
-            console.log("Current ID: ", photoIntervalID);
-
             if (!enabled) {
               try {
-                clearInterval(photoIntervalID);
+                clearInterval(parseInt(oldID));
+                console.log("Interval cleared");
               } catch (error) {
-                console.log("Error: ", error);
+                console.log("clear interval error: ", error);
               }
+            } else {
+              try {
+                //console.log("old id: ", oldID);
+                clearInterval(parseInt(oldID)); // oldID not clearing
+                var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000);
+                // use clearInterval(photoInvervalID) to stop interval
+                if (photoIntervalID) {
+                  //console.log("store id: ", photoIntervalID);
+                  storeData('@photoIntervalID', String(photoIntervalID));
+                }
+                // console.log("Current ID: ", photoIntervalID);
+                // console.log("Old interval cleared");
+              } catch (error) {
+                console.log("Enabled error");
+                throw error;
+              }
+
             }
             if (cameraRef && !enabled) {
-              var photo = await cameraRef.takePictureAsync();
-              const uri = photo.uri
-              console.log(photo.uri);
-              //uploadImage(uri);
+              try {
+                var photo = await cameraRef.takePictureAsync();
+                const uri = photo.uri
+                console.log(photo.uri);
+                uploadImage(uri); // comment out for testing
+              } catch (error) {
+                console.log("take pic error: ", error);
+              }
+
+
             }
           }}>
             <Text style={styles.text}>Take Photo</Text>
@@ -393,29 +442,6 @@ const uploadImage = async (uri) => {
 
   console.log("Photo Upload to firebase");
 };
-
-/////////cemetery////////
-
-/*
-// Find all the prefixes and items.
-listAll(listRef).then((results) => {
-  results.items.forEach((itemRef) => {
-    content2display(itemRef);
-    // All the items under listRef.
-  });
-}).catch((error) => {
-  console.log(error)
-});
-
-
-
-function content2display(itemRef) {
-  //itemRef.getDownloadURL().then()
-  console.log(itemRef)
-  getDownloadURL(itemRef)
-
-};*/
-
 
 ////////////////Cloud List all Images/////////////////
 //https://firebase.google.com/docs/storage/web/list-files

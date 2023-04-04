@@ -147,7 +147,6 @@ function HomeScreen({ navigation, route }) {
     getOldID();
   });
   // Clear old interval
-  console.log("old ID in home: ", oldID);
   clearInterval(parseInt(oldID));
 
   return (
@@ -199,7 +198,7 @@ function RobotControls({ navigation }) {
       var parsedSettings = JSON.parse(settings);
       setSelected(parseInt(parsedSettings.selectedKey));
       setIsEnabled(parsedSettings.isEnabledKey);
-      console.log("Parsed settings: ", parsedSettings);
+      //console.log("Parsed settings: ", parsedSettings);
     } catch (error) {
       console.log("get settings error on settings page: ", error);
     }
@@ -303,7 +302,7 @@ function CameraScreen({ navigation }) {
       var parsedSettings = JSON.parse(settings);
       setDelay(parseInt(parsedSettings.selectedKey));
       setEnabled(parsedSettings.isEnabledKey);
-      console.log("Parsed settings: ", parsedSettings);
+      //console.log("Parsed settings: ", parsedSettings);
     } catch (error) {
       console.log("get settings error: ", error);
     }
@@ -315,7 +314,7 @@ function CameraScreen({ navigation }) {
       if (ID == undefined) {
         ID = 0;
       }
-      console.log("old ID: ", ID);
+      //console.log("old ID: ", ID);
       setOldID(parseInt(ID));
     } catch (error) {
       console.log("get ID error: ", error);
@@ -373,16 +372,16 @@ function CameraScreen({ navigation }) {
               }
             } else {
               try {
-                console.log("old id: ", oldID);
+                //console.log("old id: ", oldID);
                 clearInterval(parseInt(oldID)); // oldID not clearing
                 var photoIntervalID = setInterval(autoPhotoCapture, 3 * 1000);
                 // use clearInterval(photoInvervalID) to stop interval
                 if (photoIntervalID) {
-                  console.log("store id: ", photoIntervalID);
+                  //console.log("store id: ", photoIntervalID);
                   storeData('@photoIntervalID', String(photoIntervalID));
                 }
-                console.log("Current ID: ", photoIntervalID);
-                console.log("Old interval cleared");
+                // console.log("Current ID: ", photoIntervalID);
+                // console.log("Old interval cleared");
               } catch (error) {
                 console.log("Enabled error");
                 throw error;

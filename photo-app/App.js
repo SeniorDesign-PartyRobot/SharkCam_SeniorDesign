@@ -320,13 +320,14 @@ function CameraScreen({ navigation }) {
             }
 
 
-            var photoIntervalID = 100; //setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
+            var photoIntervalID = setInterval(autoPhotoCapture, 5 * 1000); // use clearInterval(photoInvervalID) to stop interval
             storeData('@photoIntervalID', String(photoIntervalID));
             console.log("Current ID: ", photoIntervalID);
 
             if (!enabled) {
               try {
                 clearInterval(photoIntervalID);
+                console.log("Interval cleared");
               } catch (error) {
                 console.log("Error: ", error);
               }

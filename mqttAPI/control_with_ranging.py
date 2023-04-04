@@ -5,13 +5,11 @@ import board
 import adafruit_vl53l4cd
 from common.python_mqtt.mqtt_client import MQTTClient
 
-robot_ip = "192.168.8.209"
-mqtt_client = MQTTClient(robot_ip)
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
-timing_budget = 50 #sample rate (Hz)
-inter_measurement = 0
+timing_budget = 50 # sample rate (Hz)
+inter_measurement = 0 # time between samples
 i2c = board.I2C()  # uses board.SCL and board.SDA
 ToF = adafruit_vl53l4cd.VL53L4CD(i2c)
 ToF.inter_measurement = inter_measurement
@@ -25,7 +23,7 @@ def ranging():
     print("ranging")
     ToF.start_ranging()  # start measurments
     is_calibrated = False
-    detection_threshold = 5
+    detection_threshold = 5 # change (cm) to trigger detection
 
     while True:
         while not ToF.data_ready:
@@ -42,14 +40,21 @@ def ranging():
         else:     
             detection.clear()
 
+def clean_robot():
+    """retries cleaning until state verified"""    
+    while not mqtt_client.is_cleaning():
+        mqtt_client.clean()
+        time.sleep(1)    
 
 def pause_robot():
-    while mqtt_client.is_paused() == False:
+    """retries pausing until state verified"""
+    while not mqtt_client.is_paused():
         mqtt_client.pause()
         time.sleep(1)
 
 def dock_robot():
-    while mqtt_client.is_docking() == False:
+    """retries docking until state verified"""
+    while not mqtt_client.is_docking():
         mqtt_client.dock()
         time.sleep(1)
 
@@ -57,7 +62,7 @@ def move_robot_off_dock_NO_VAC():
      if mqtt_client.is_docked():
         mqtt_client.clean()
         mqtt_client.set_fan_speed(0)
-        time.sleep(15)
+        time.sleep(8)
         pause_robot()
 
 def obstacle_avoidance():
@@ -67,7 +72,12 @@ def obstacle_avoidance():
         time.sleep(1)
 
 
-def basic_photo_run(capture_number, capture_interval):
+def basic_photo_run(capture_number: int, capture_interval: int):
+    global robot_ip
+    robot_ip = "192.168.8.209"
+    global mqtt_client
+    mqtt_client = MQTTClient(robot_ip)
+    
     capture_time = 5 # Amount of time robot pauses to capture
     
     move_robot_off_dock_NO_VAC()
@@ -81,12 +91,14 @@ def basic_photo_run(capture_number, capture_interval):
         time.sleep(capture_time)
         mqtt_client.resume()
     captureComplete.set()
+    dock_robot()
 
 
 if __name__ == "__main__":
     rangingProcess = multiprocessing.Process(target=ranging, daemon=False)
     rangingProcess.start()
     captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_number,capture_interval))
+    captureProcess.start()
     captureProcessPID = captureProcess.pid
 
     while not captureComplete.set():
@@ -97,5 +109,5 @@ if __name__ == "__main__":
         obstacle_avoidance()
         psutil.Process(pid=captureProcessPID).resume()
         print("resuming")
-
-    dock_robot()
+        if mqtt_client.is_docked():
+            continue

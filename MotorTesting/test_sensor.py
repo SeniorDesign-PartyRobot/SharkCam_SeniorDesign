@@ -9,7 +9,7 @@ import adafruit_vl53l4cd
 def run_sensor():
     # set constants
     min_distance = 5 # in cm
-    timing_budget = 300
+    timing_budget = 200
     inter_measurement = 0
 
     # start script

@@ -6,8 +6,8 @@ def run_motor():
 
     # Set constants
     ControlPin = [11, 13, 15, 16]
-    num_steps = 2048 # Set the number of steps for a full rotation
-    delay = 0.0001 # Set delay between steps
+    num_steps = 512 # Set the number of steps for a full rotation
+    delay = 0.001 # Set delay between steps
     step_sequence = [[1,0,0,0],[1,1,0,0],
                     [0,1,0,0],[0,1,1,0],
                     [0,0,1,0],[0,0,1,1],
@@ -25,5 +25,5 @@ def run_motor():
             for pin in range(4):
                 GPIO.output(ControlPin[pin], step_sequence[step][pin])
             time.sleep(delay)
-        if i % 512 == 0: # quarter turn has been completed
-            time.sleep(0.5)
+        if i % 128 == 0: # quarter turn has been completed
+            time.sleep(1.5)

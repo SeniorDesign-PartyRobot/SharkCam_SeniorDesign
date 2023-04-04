@@ -19,7 +19,6 @@ function startPythonProcess() {
 
 let currentProcess = null;
 
-
 wss.on("connection", function connection(ws) {
     console.log('New connection');
     ws.send('howdy');

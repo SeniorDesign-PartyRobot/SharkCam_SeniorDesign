@@ -8,8 +8,11 @@ import adafruit_vl53l4cd
 from common.python_mqtt.mqtt_client import MQTTClient
 """
 import sys
-sys.stdout.write("python2 triggered")
-print("python triggerd")
+
+data = "python process spawned"
+print(data)
+sys.stdout.write(data)
+
 """
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures

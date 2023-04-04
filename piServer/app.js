@@ -9,7 +9,7 @@ const port = 3000;
 //const { spawn } = require('child_process');
 
 const { spawn } = require('child_process');
-const child = spawn('ls');
+const child = spawn('python', ['piCommunication.py']);
 
 // use child.stdout.setEncoding('utf8'); if you want text chunks
 child.stdout.on('data', (chunk) => {
@@ -25,6 +25,7 @@ child.stderr.on('data', (data) => {
 child.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
 });
+
 
 /*
 

@@ -270,27 +270,26 @@ function CameraScreen({ navigation }) {
   // hooks have to be above return statements
   const [delay, setDelay] = useState();
   const [enabled, setEnabled] = useState();
+  const [oldID, setOldID] = useState();
 
   async function getSettings() {
     const settings = await AsyncStorage.getItem('@stringSettingsObj') // get existing data, use that for settings on initial load
     var parsedSettings = JSON.parse(settings);
     setDelay(parseInt(parsedSettings.selectedKey));
     setEnabled(parsedSettings.isEnabledKey);
+    console.log("Parsed settings: ", parsedSettings);
   }
   async function getID() {
     const ID = await AsyncStorage.getItem('@photoIntervalID');
-    console.log(ID);
-    return ID;
+    console.log("old ID: ", ID);
+    setOldID(ID);
   }
-  var oldID = getID();
+
   getSettings();
+  getID();
 
   // Clear old interval
   //clearInterval(photoIntervalID);
-  useEffect(() => {
-    clearInterval(oldID);
-  })
-
 
   if (!permission) {
     // Camera permissions are still loading

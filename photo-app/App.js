@@ -103,6 +103,7 @@ const getData = async (key) => {
 const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
+    console.log("Stored");
   } catch (e) {
     // saving error
   }
@@ -269,30 +270,22 @@ function CameraScreen({ navigation }) {
   // hooks have to be above return statements
   const [delay, setDelay] = useState();
   const [enabled, setEnabled] = useState();
-  const [oldID, setOldID] = useState();
 
-
-  useEffect(() => { // do I need to await? Yes. 
-    getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
-    let parsedValue = JSON.parse(value);
-    setDelay(parseInt(parsedValue.selectedKey));
-    setEnabled(parsedValue.isEnabledKey);
-    // getData('@photoIntervalID');
-    // console.log("Value: ", value);
-    // setOldID(value);
-    console.log("Delay, Enabled ", delay, enabled);
-  });
-
-
-
-
-  try {
-    clearInterval(oldID);
+  async function getSettings() {
+    const settings = await AsyncStorage.getItem('@stringSettingsObj') // get existing data, use that for settings on initial load
+    var parsedSettings = JSON.parse(settings);
+    setDelay(parseInt(parsedSettings.selectedKey));
+    setEnabled(parsedSettings.isEnabledKey);
   }
-  catch {
-    console.log("Nothing to clear");
+  async function getID() {
+    const ID = await AsyncStorage.getItem('@photoIntervalID');
+    console.log(ID);
+    return ID;
   }
+  var oldID = getID();
+  getSettings();
 
+  console.log(delay, enabled);
 
   if (!permission) {
     // Camera permissions are still loading
@@ -327,9 +320,8 @@ function CameraScreen({ navigation }) {
             }
 
 
-            var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
+            var photoIntervalID = 100; //setInterval(autoPhotoCapture, delay * 1000); // use clearInterval(photoInvervalID) to stop interval
             storeData('@photoIntervalID', String(photoIntervalID));
-
             console.log("Current ID: ", photoIntervalID);
 
             if (!enabled) {

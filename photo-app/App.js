@@ -8,7 +8,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Image } from 'react-native';
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, Switch, Alert, StyleSheet, TouchableOpacity } from 'react-native';
@@ -19,6 +19,7 @@ import { Camera } from 'expo-camera';
 import { storage } from "./firebase_setup.js";
 import { uploadBytesResumable, ref, getDownloadURL, listAll } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 ///////////////////// Styling //////////////////
 const styles = StyleSheet.create({
@@ -86,10 +87,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#01A39E",
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 300,
+    height: 300,
     resizeMode: 'contain',
     marginBottom: 20,
+  },
+  line: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
+    width: '100%',
+    marginBottom: 50,
   }
 });
 
@@ -175,19 +182,24 @@ function sendMsg(input) {
 function RobotControls({ navigation }) {
 
   // init settings values
-  var delay = null; // default delay, even if not shown on drop down
+  //var delay = null; // default delay, even if not shown on drop down
   const [selected, setSelected] = React.useState("");
   const [isEnabled, setIsEnabled] = useState(false);
   // get existing cache values, use to show current settings
 
-  useState(() => {
-    getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
-    const parsedSettings = JSON.parse(value);
-    console.log("Parsed settings: ", parsedSettings);
-    setSelected(parsedSettings.selectedKey);
-    setIsEnabled(parsedSettings.isEnabledKey);
-  });
+  useEffect(() => {
+    const getSettings = async () => {
+      const value = await AsyncStorage.getItem('@stringSettingsObj');
+      const parsedSettings = JSON.parse(value);
+      console.log("Parsed settings: ", parsedSettings);
+      if (parsedSettings?.selectedKey) {
+        setSelected(parsedSettings.selectedKey);
+        setIsEnabled(parsedSettings.isEnabledKey);
+      }
 
+    };
+    getSettings();
+  }, []);
 
   //////////// camera delay selection code //////////////
   delay = 10;
@@ -278,19 +290,20 @@ function CameraScreen({ navigation }) {
   const [oldID, setOldID] = useState();
 
 
-  useEffect(() => { // do I need to await? Yes. 
-    getData('@stringSettingsObj'); // get existing data, use that for settings on initial load
-    let parsedValue = JSON.parse(value);
-    setDelay(parseInt(parsedValue.selectedKey));
-    setEnabled(parsedValue.isEnabledKey);
-    // getData('@photoIntervalID');
-    // console.log("Value: ", value);
-    // setOldID(value);
-    console.log("Delay, Enabled ", delay, enabled);
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const value = await AsyncStorage.getItem('@stringSettingsObj'); // get existing data, use that for settings on initial load
+      let parsedValue = JSON.parse(value);
+      console.log("Parsed settings2: ", parsedValue);
+      const settingsEnabled = parsedValue.isEnabledKey
+      const settingsDelay = parsedValue.selectedKey
+      console.log("Delay, Enabled ", settingsDelay, settingsEnabled);
 
+    };
+    fetchData();
+  }, [value]);
 
-
+  const [value, setValue] = useState(null);
 
   try {
     clearInterval(oldID);
@@ -417,7 +430,6 @@ const ListImagesInBucket = async () => {
   return item_list;
 }
 
-
 //////////////Photo display screen ////////////////////
 function PhotoScreen() {
   const [imageList, setImageList] = useState([]);
@@ -430,13 +442,13 @@ function PhotoScreen() {
 
   return (
     <View style={styles.genericContainer}>
-      <Text style={styles.text}>List of images:</Text>
+      <View style={styles.line} />
+      <Button title="Click to load/refresh" onPress={displayImages} />
       <ScrollView>
         {imageList.map((imageUrl, index) => (
           <Image key={index} source={{ uri: imageUrl }} style={styles.image} />
         ))}
       </ScrollView>
-      <Button title="List Images" onPress={displayImages} />
     </View>
   );
 }

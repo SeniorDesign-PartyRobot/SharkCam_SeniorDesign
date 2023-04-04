@@ -9,6 +9,9 @@ from common.python_mqtt.mqtt_client import MQTTClient
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
+robot_ip = "192.168.8.209"
+mqtt_client = MQTTClient(robot_ip)
+
 timing_budget = 50 # sample rate (Hz)
 inter_measurement = 0 # time between samples
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -62,10 +65,12 @@ def ranging():
         if not is_calibrated:
             time.sleep(1)
             reference_distance = distance
+            print("reference dist:" + str(reference_distance))
             is_calibrated = True
             is_calibratedEvent.set()
         if distance < reference_distance - detection_threshold:
             detection.set()
+            #print("detection!")
         else:     
             detection.clear()
 
@@ -90,9 +95,11 @@ def dock_robot():
 def move_robot_off_dock_NO_VAC():
      if mqtt_client.is_docked():
         mqtt_client.clean()
+        print("moving off dock")
         mqtt_client.set_fan_speed(0)
-        time.sleep(8)
+        time.sleep(5)
         pause_robot()
+        print("pausing")
 
 def obstacle_avoidance():
     pause_robot()
@@ -107,38 +114,46 @@ def basic_photo_run(capture_number: int, capture_interval: int):
     global mqtt_client
     mqtt_client = MQTTClient(robot_ip)
     
+    #robot_ip = "192.168.8.209"
+    #mqtt_client = MQTTClient(robot_ip)
+    
     capture_time = 5 # Amount of time robot pauses to capture
     
     move_robot_off_dock_NO_VAC()
     while not is_calibratedEvent.is_set():
         pass
     mqtt_client.resume()
+    print("starting")
     
     for i in range(capture_number):
         time.sleep(capture_interval)
         pause_robot()
+        print("pausing for photo")
         #run_motor()
         #while not rotation_complete.is_set():
         #    pass
         time.sleep(capture_time)
         rotation_complete.clear()
         mqtt_client.resume()
+        print("resuming photo run")
     capture_Complete.set()
     dock_robot()
-
+    print("returning to dock")
 
 if __name__ == "__main__":
-    rangingProcess = multiprocessing.Process(target=ranging, daemon=False)
-    rangingProcess.start()
     captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_number,capture_interval))
     captureProcess.start()
     captureProcessPID = captureProcess.pid
+    rangingProcess = multiprocessing.Process(target=ranging, daemon=False)
+    rangingProcess.start()
+
 
     while not capture_Complete.set():
         while not detection.is_set():
             pass
         psutil.Process(pid=captureProcessPID).suspend()
-        print("detection!")
+        print("suspending")
+        print(mqtt_client)
         obstacle_avoidance()
         psutil.Process(pid=captureProcessPID).resume()
         print("resuming")

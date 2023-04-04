@@ -387,7 +387,7 @@ function CameraScreen({ navigation }) {
               try {
                 //console.log("old id: ", oldID);
                 clearInterval(parseInt(oldID)); // oldID not clearing
-                var photoIntervalID = setInterval(autoPhotoCapture, 3 * 1000);
+                var photoIntervalID = setInterval(autoPhotoCapture, delay * 1000);
                 // use clearInterval(photoInvervalID) to stop interval
                 if (photoIntervalID) {
                   //console.log("store id: ", photoIntervalID);

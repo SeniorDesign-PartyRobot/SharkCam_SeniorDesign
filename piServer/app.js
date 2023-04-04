@@ -32,8 +32,7 @@ wss.on("connection", function connection(ws) {
                 console.log("starting routine code")
                 currentProcess = startPythonProcess();
             }
-        }
-        if (incomingMsg == 'stop') {
+        } else if (incomingMsg == 'stop') {
             console.log("stop message received");
 
         } else {

@@ -6,6 +6,7 @@ import board
 import adafruit_vl53l4cd
 from common.python_mqtt.mqtt_client import MQTTClient
 
+print("python triggerd")
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
@@ -140,22 +141,22 @@ def basic_photo_run(capture_number: int, capture_interval: int):
     dock_robot()
     print("returning to dock")
 
-if __name__ == "__main__":
-    captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_number,capture_interval))
-    captureProcess.start()
-    captureProcessPID = captureProcess.pid
-    rangingProcess = multiprocessing.Process(target=ranging, daemon=False)
-    rangingProcess.start()
+# always trigger
+captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_number,capture_interval))
+captureProcess.start()
+captureProcessPID = captureProcess.pid
+rangingProcess = multiprocessing.Process(target=ranging, daemon=False)
+rangingProcess.start()
 
 
-    while not capture_Complete.set():
-        while not detection.is_set():
-            pass
-        psutil.Process(pid=captureProcessPID).suspend()
-        print("suspending")
-        print(mqtt_client)
-        obstacle_avoidance()
-        psutil.Process(pid=captureProcessPID).resume()
-        print("resuming")
-        if mqtt_client.is_docked():
-            continue
+while not capture_Complete.set():
+    while not detection.is_set():
+        pass
+    psutil.Process(pid=captureProcessPID).suspend()
+    print("suspending")
+    print(mqtt_client)
+    obstacle_avoidance()
+    psutil.Process(pid=captureProcessPID).resume()
+    print("resuming")
+    if mqtt_client.is_docked():
+        continue

@@ -28,7 +28,7 @@ def move_robot_off_dock_NO_VAC():
         pause_robot()
 
 
-def basic_photo_run(capture_number, capture_interval):
+def basic_photo_run(capture_number: int, capture_interval: int):
     capture_time = 5 # Amount of time robot pauses to capture
     
     mqtt_client.resume()

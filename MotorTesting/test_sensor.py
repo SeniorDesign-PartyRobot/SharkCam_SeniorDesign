@@ -9,7 +9,7 @@ import adafruit_vl53l4cd
 def run_sensor():
     # set constants
     min_distance = 5 # in cm
-    timing_budget = 50
+    timing_budget = 200
     inter_measurement = 0
 
     # start script
@@ -23,7 +23,7 @@ def run_sensor():
     ToF.timing_budget = timing_budget
 
     ToF.start_ranging()  # start measurments
-    for i in range(100):
+    for i in range(10000):
         while not ToF.data_ready:
             pass
         ToF.clear_interrupt()

@@ -8,7 +8,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView, Image } from 'react-native';
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, Switch, Alert, StyleSheet, TouchableOpacity } from 'react-native';
@@ -17,8 +17,9 @@ import { useState, useEffect } from 'react';
 import { CameraType } from 'expo-camera';
 import { Camera } from 'expo-camera';
 import { storage } from "./firebase_setup.js";
-import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
+import { uploadBytesResumable, ref, getDownloadURL, listAll } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 ///////////////////// Styling //////////////////
 const styles = StyleSheet.create({
@@ -84,6 +85,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "#01A39E",
+  },
+  image: {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain',
+    marginBottom: 20,
+  },
+  line: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
+    width: '100%',
+    marginBottom: 50,
   }
 });
 
@@ -205,8 +218,7 @@ function RobotControls({ navigation }) {
   }
   useState(() => {
     getSettings();
-  })
-
+  });
 
   //////////// camera delay selection code //////////////
   delay = 10;
@@ -360,6 +372,7 @@ function CameraScreen({ navigation }) {
           <TouchableOpacity style={styles.button} onPress={async () => {
             async function autoPhotoCapture() {
               var photo = await cameraRef.takePictureAsync();
+              uploadImage(photo.uri); // comment out for testing
               console.log("Auto capture URI: ", photo.uri);
             }
 
@@ -393,11 +406,12 @@ function CameraScreen({ navigation }) {
                 var photo = await cameraRef.takePictureAsync();
                 const uri = photo.uri
                 console.log(photo.uri);
+                uploadImage(uri); // comment out for testing
               } catch (error) {
                 console.log("take pic error: ", error);
               }
 
-              //uploadImage(uri);
+
             }
           }}>
             <Text style={styles.text}>Take Photo</Text>
@@ -429,11 +443,38 @@ const uploadImage = async (uri) => {
   console.log("Photo Upload to firebase");
 };
 
+////////////////Cloud List all Images/////////////////
+//https://firebase.google.com/docs/storage/web/list-files
+//https://stackoverflow.com/questions/37335102/how-to-get-a-list-of-all-files-in-cloud-storage-in-a-firebase-app
+
+const ListImagesInBucket = async () => {
+  // Create a reference under which you want to list
+  const imageDir = ''; //hardcoded for now
+  const listRef = ref(storage, imageDir);
+  const results = await listAll(listRef);
+  const item_list = await Promise.all(results.items.map((itemRef) => getDownloadURL(itemRef)));
+  return item_list;
+}
+
 //////////////Photo display screen ////////////////////
 function PhotoScreen() {
+  const [imageList, setImageList] = useState([]);
+
+  const displayImages = async () => {
+    const list = await ListImagesInBucket();
+    setImageList(list);
+    console.log('printed images')
+  };
+
   return (
     <View style={styles.genericContainer}>
-      <Text style={styles.text}>Link to photos displayed here!</Text>
+      <View style={styles.line} />
+      <Button title="Click to load/refresh" onPress={displayImages} />
+      <ScrollView>
+        {imageList.map((imageUrl, index) => (
+          <Image key={index} source={{ uri: imageUrl }} style={styles.image} />
+        ))}
+      </ScrollView>
     </View>
   );
 }

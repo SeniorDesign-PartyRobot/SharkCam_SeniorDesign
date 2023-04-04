@@ -5,8 +5,11 @@ import RPi.GPIO as GPIO
 import board
 import adafruit_vl53l4cd
 from common.python_mqtt.mqtt_client import MQTTClient
+import sys
 
+sys.stdout.write("python2 triggered")
 print("python triggerd")
+"""
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
@@ -27,7 +30,7 @@ capture_Complete = multiprocessing.Event()
 
 
 # def run_motor():
-#     """Rotates motor four quarter turns"""
+#     #Rotates motor four quarter turns
 #     ControlPin = [11, 13, 15, 16]
 #     num_steps = 512 # Set the number of steps for a full rotation
 #     delay = 0.001 # Set delay between steps
@@ -76,19 +79,19 @@ def ranging():
             detection.clear()
 
 def clean_robot():
-    """retries cleaning until state verified"""    
+    #retries cleaning until state verified   
     while not mqtt_client.is_cleaning():
         mqtt_client.clean()
         time.sleep(1)    
 
 def pause_robot():
-    """retries pausing until state verified"""
+    #retries pausing until state verified
     while not mqtt_client.is_paused():
         mqtt_client.pause()
         time.sleep(1)
 
 def dock_robot():
-    """retries docking until state verified"""
+    #retries docking until state verified
     while not mqtt_client.is_docking():
         mqtt_client.dock()
         time.sleep(1)
@@ -160,3 +163,4 @@ while not capture_Complete.set():
     print("resuming")
     if mqtt_client.is_docked():
         continue
+"""

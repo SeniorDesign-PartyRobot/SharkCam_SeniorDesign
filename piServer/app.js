@@ -9,16 +9,24 @@ const port = 3000;
 //const { spawn } = require('child_process');
 
 const { spawn } = require('child_process');
-const child = spawn('ls',);
+const child = spawn('ls');
+
 // use child.stdout.setEncoding('utf8'); if you want text chunks
 child.stdout.on('data', (chunk) => {
     // data from the standard output is here as buffers
+    console.log(chunk.toString());
 });
-// since these are streams, you can pipe them elsewhere
-child.stderr.pipe(dest);
+
+// log any errors that occur
+child.stderr.on('data', (data) => {
+    console.error(`child process stderr:\n${data}`);
+});
+
 child.on('close', (code) => {
     console.log(`child process exited with code ${code}`);
 });
+
+/*
 
 
 function startPythonProcess() {
@@ -65,5 +73,5 @@ wss.on("connection", function connection(ws) {
 server.listen(8080, () => {
     console.log("Listening to port 8080");
 });
-
+*/
 

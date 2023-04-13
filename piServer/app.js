@@ -42,6 +42,16 @@ function startPythonProcess() {
 function stopPythonProcess() {
     const { spawn } = require('child_process'); // Move this line here
     const child = spawn('python', ['stopCommand.py']);
+
+    // log any errors that occur
+    child.stderr.on('data', (data) => {
+        console.error(`child process stderr:\n${data}`);
+    });
+
+    child.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
+
     return child;
 
 }

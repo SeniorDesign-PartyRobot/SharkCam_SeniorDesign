@@ -31,11 +31,6 @@ function startPythonProcess() {
     return child; // Return the child process object instead of the undefined "process" variable
 }
 
-
-//Main
-startPythonProcess();
-
-/*
 let currentProcess = null;
 
 wss.on("connection", function connection(ws) {
@@ -66,7 +61,4 @@ wss.on("connection", function connection(ws) {
     }
 });
 
-
-
-*/
 

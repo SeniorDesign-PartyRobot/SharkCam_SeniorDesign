@@ -1,4 +1,3 @@
-"""
 import time
 import multiprocessing
 import psutil
@@ -6,12 +5,10 @@ import RPi.GPIO as GPIO
 import board
 import adafruit_vl53l4cd
 from common.python_mqtt.mqtt_client import MQTTClient
-"""
 import sys
 
 data = "python process spawned"
 print(data)
-sys.stdout.write(data)
 
 """
 capture_number = 2 # Number of times robot pauses to capture

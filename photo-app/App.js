@@ -205,7 +205,7 @@ let connectionFlag = 0;
 function RobotControls({ navigation }) {
   /////////////// status check ///////////////
   const [status, setStatus] = useState({ text: 'Loading...', color: 'orange' });
-  const [retry, setRetryButton] = useState(true);
+  const [retry, setRetryButton] = useState(false);
 
   function checkConnection() {
     if (ws.readyState === ws.OPEN && connectionFlag !== 1) {

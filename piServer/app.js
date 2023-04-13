@@ -11,7 +11,7 @@ const port = 3000;
 
 function startPythonProcess() {
     const { spawn } = require('child_process'); // Move this line here
-    const child = spawn('python', ['piCommunication.py']);
+    const child = spawn('python', ['piCommunication.py', 30]);
 
     // use child.stdout.setEncoding('utf8'); if you want text chunks
     child.stdout.on('data', (chunk) => {
@@ -39,6 +39,13 @@ function startPythonProcess() {
     return child; // Return the child process object instead of the undefined "process" variable
 }
 
+function stopPythonProcess() {
+    const { spawn } = require('child_process'); // Move this line here
+    const child = spawn('python', ['stopCommand.py']);
+    return child;
+
+}
+
 let currentProcess = null;
 
 wss.on("connection", function connection(ws) {
@@ -54,6 +61,9 @@ wss.on("connection", function connection(ws) {
             }
         } else if (incomingMsg == 'stop') {
             console.log("stop message received");
+            currentProcess.kill();
+            currentProcess = stopPythonProcess();
+
 
         } else {
             console.log(incomingMsg);

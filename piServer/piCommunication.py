@@ -10,6 +10,8 @@ import sys
 data = "python process spawned"
 print(data)
 
+delayVar = sys.argv[1]
+print(delayVar)
 
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures

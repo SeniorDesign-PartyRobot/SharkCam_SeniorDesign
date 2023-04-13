@@ -10,7 +10,7 @@ import sys
 data = "python process spawned"
 print(data)
 
-"""
+
 capture_number = 2 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
@@ -164,4 +164,3 @@ while not capture_Complete.set():
     print("resuming")
     if mqtt_client.is_docked():
         continue
-"""

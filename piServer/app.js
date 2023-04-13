@@ -15,8 +15,11 @@ function startPythonProcess() {
 
     // use child.stdout.setEncoding('utf8'); if you want text chunks
     child.stdout.on('data', (chunk) => {
-        // data from the standard output is here as buffers
-        console.log(chunk.toString());
+        const pythonMessage = chunk.toString();// data from the standard output is here as buffers
+        console.log(pythonMessage);
+        if (output.include('take pic')) {
+            console.log("sending message to print")
+        }
     });
 
     // log any errors that occur

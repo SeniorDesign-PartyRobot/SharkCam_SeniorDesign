@@ -16,7 +16,8 @@ capture_interval = 15 # Time between captures
 
 robot_ip = "192.168.8.209"
 mqtt_client = MQTTClient(robot_ip)
-
+print("take pic")
+"""
 timing_budget = 50 # sample rate (Hz)
 inter_measurement = 0 # time between samples
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -164,3 +165,4 @@ while not capture_Complete.set():
     print("resuming")
     if mqtt_client.is_docked():
         continue
+"""

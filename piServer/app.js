@@ -88,6 +88,6 @@ wss.on("connection", function connection(ws) {
     }
 });
 
-server.listen(80, () => {
-    console.log("Listening to port 80");
+server.listen(8080, () => {
+    console.log("Listening to port 8080");
 });

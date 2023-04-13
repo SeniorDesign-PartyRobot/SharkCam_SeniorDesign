@@ -17,8 +17,12 @@ function startPythonProcess() {
     child.stdout.on('data', (chunk) => {
         const pythonMessage = chunk.toString();// data from the standard output is here as buffers
         console.log(pythonMessage);
-        if (output.include('take pic')) {
-            console.log("sending message to print")
+        if (pythonMessage.includes('take pic')) {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send("pic command");
+                console.log("sending message to take pic");
+            }
+
         }
     });
 

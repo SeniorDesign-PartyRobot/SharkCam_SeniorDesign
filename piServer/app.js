@@ -43,7 +43,6 @@ let currentProcess = null;
 
 wss.on("connection", function connection(ws) {
     console.log('New connection');
-    ws.send('howdy');
     var incomingMsg;
     ws.on('message', (data) => { // this loops forever. Why?
         incomingMsg = data.toString();

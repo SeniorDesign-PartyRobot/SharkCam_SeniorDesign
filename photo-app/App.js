@@ -188,6 +188,10 @@ function HomeScreen({ navigation, route }) {
   );
 }
 ////////////////// Robot Controls /////////////////////////////
+
+
+
+
 function sendMsg(input) {
   try {
     console.log(input);
@@ -197,8 +201,26 @@ function sendMsg(input) {
   }
 
 };
-
+let connectionFlag = 0;
 function RobotControls({ navigation }) {
+  /////////////// status check ///////////////
+  const [status, setStatus] = useState({ text: 'Loading...', color: 'orange' });
+  const [retry, setRetryButton] = useState(true);
+
+  function checkConnection() {
+    if (ws.readyState === ws.OPEN && connectionFlag !== 1) {
+      console.log('Connection is open');
+      connectionFlag = 1;
+      setStatus({ text: 'Robot Status: Connected', color: 'green' });
+      setRetryButton(false);
+    } else if (ws.readyState !== ws.OPEN && connectionFlag !== 2) {
+      console.log('Connection is closed');
+      connectionFlag = 2;
+      setStatus({ text: 'Robot Status: Disconnected', color: 'red' });
+      setRetryButton(true)
+    }
+  }
+  setInterval(checkConnection, 2000);
 
   // init settings values
   const [selected, setSelected] = React.useState("");
@@ -249,6 +271,10 @@ function RobotControls({ navigation }) {
 
   return (
     <View style={styles.genericContainer}>
+      <Text style={{ color: status.color }}>{status.text}</Text>
+      {retry && (
+        <Button title="Reconnect" onPress={() => serverConnection()} />
+      )}
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={() => sendMsg('start')}>
           <Text style={styles.settingsButtonText}>{"Start Robot"}</Text>
@@ -482,10 +508,15 @@ function PhotoScreen() {
 ///////////////// Main //////////////////////////
 // inits are here because I'm tired
 const Stack = createNativeStackNavigator();
-const WS_URL = 'ws://192.168.8.207:8080';
-const ws = new WebSocket(WS_URL);
+
+let ws;
+function serverConnection() {
+  const WS_URL = 'ws://192.168.8.207:8080';
+  ws = new WebSocket(WS_URL);
+}
 
 function App() {
+  serverConnection();
 
   ws.onopen = () => {
     console.log('connected');

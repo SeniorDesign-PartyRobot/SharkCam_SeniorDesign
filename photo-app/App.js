@@ -8,7 +8,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, Dimensions } from 'react-native';
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, Switch, Alert, StyleSheet, TouchableOpacity } from 'react-native';
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#01A39E",
   },
   image: {
-    width: 300,
-    height: 300,
+    width: 700,
+    height: 700,
     resizeMode: 'contain',
     marginBottom: 20,
   },
@@ -205,7 +205,7 @@ let connectionFlag = 0;
 function RobotControls({ navigation }) {
   /////////////// status check ///////////////
   const [status, setStatus] = useState({ text: 'Loading...', color: 'orange' });
-  const [retry, setRetryButton] = useState(false);
+  const [retry, setRetryButton] = useState(true);
 
   function checkConnection() {
     if (ws.readyState === ws.OPEN && connectionFlag !== 1) {
@@ -492,13 +492,17 @@ function PhotoScreen() {
     console.log('printed images')
   };
 
+  const windowWidth = Dimensions.get('window').width; //sets size of displayed images depending on screen size
+  const windowHeight = Dimensions.get('window').height;
+  //const imageHeight = windowWidth; // images will be square
+
   return (
     <View style={styles.genericContainer}>
       <View style={styles.line} />
       <Button title="Click to load/refresh" onPress={displayImages} />
       <ScrollView>
         {imageList.map((imageUrl, index) => (
-          <Image key={index} source={{ uri: imageUrl }} style={styles.image} />
+          <Image key={index} source={{ uri: imageUrl }} style={{ width: windowWidth, height: windowHeight, resizeMode: 'contain', marginBottom: 5 }} />
         ))}
       </ScrollView>
     </View>
@@ -506,7 +510,6 @@ function PhotoScreen() {
 }
 
 ///////////////// Main //////////////////////////
-// inits are here because I'm tired
 const Stack = createNativeStackNavigator();
 
 let ws;

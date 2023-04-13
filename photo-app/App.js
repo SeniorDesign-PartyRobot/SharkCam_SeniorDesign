@@ -491,9 +491,10 @@ function App() {
     console.log('connected');
   }
 
-  ws.onmessage = (data) => {
-    console.log(data);
-  }
+  ws.on('message', function incoming(data) {
+    console.log('Received message: ' + data);
+  });
+
 
   return (
     <NavigationContainer>

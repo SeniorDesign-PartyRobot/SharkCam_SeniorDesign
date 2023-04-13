@@ -18,8 +18,8 @@ function startPythonProcess() {
         const pythonMessage = chunk.toString();// data from the standard output is here as buffers
         console.log(pythonMessage);
         if (pythonMessage.includes('take pic')) {
-            if (ws.readyState === WebSocket.OPEN) {
-                ws.send("pic command");
+            if (wss.readyState === WebSocket.OPEN) {
+                wss.send("pic command");
                 console.log("sending message to take pic");
             }
 

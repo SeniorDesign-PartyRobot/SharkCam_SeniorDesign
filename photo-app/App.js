@@ -493,7 +493,7 @@ function App() {
 
   ws.addEventListener('message', function incoming(event) {
     const data = event.data;
-    console.log('Received message: ' + data);
+    console.log('Message from Pi: ' + data);
   });
 
 

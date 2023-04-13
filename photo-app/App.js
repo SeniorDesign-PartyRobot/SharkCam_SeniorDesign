@@ -491,7 +491,8 @@ function App() {
     console.log('connected');
   }
 
-  ws.on('message', function incoming(data) {
+  ws.addEventListener('message', function incoming(event) {
+    const data = event.data;
     console.log('Received message: ' + data);
   });
 

@@ -33,7 +33,7 @@ docking = multiprocessing.Event()
 
 def run_motor():
     """Rotates motor four quarter turns"""
-    ControlPin = [11, 13, 15, 16]
+    ControlPin = [17, 27, 22, 23]
     num_steps = 512 # Set the number of steps for a full rotation
     delay = 0.001 # Set delay between steps
     step_sequence = [[1,0,0,0],[1,1,0,0],
@@ -42,7 +42,7 @@ def run_motor():
                      [0,0,0,1],[1,0,0,1]] 
 
     # Set up the GPIO pins
-    #GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
     for pin in ControlPin:
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin,0)

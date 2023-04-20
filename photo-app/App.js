@@ -520,7 +520,7 @@ const Stack = createNativeStackNavigator();
 
 let ws;
 function serverConnection() {
-  const WS_URL = 'ws://192.168.104.37:8080';
+  const WS_URL = 'ws://192.168.8.207:8080';
   ws = new WebSocket(WS_URL);
 }
 

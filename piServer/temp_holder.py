@@ -13,7 +13,7 @@ print(data)
 delayVar = sys.argv[1]
 print(delayVar)
 
-capture_number = 2 # Number of times robot pauses to capture
+capture_number = 15 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
 robot_ip = "192.168.8.209"

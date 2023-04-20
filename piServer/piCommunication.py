@@ -121,7 +121,7 @@ def obstacle_avoidance():
 
 def basic_photo_run(capture_number: int, capture_interval: int):
     global robot_ip
-    robot_ip = "192.168.104.69"
+    robot_ip = "192.168.8.209"
     global mqtt_client
     mqtt_client = MQTTClient(robot_ip)
     

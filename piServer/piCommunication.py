@@ -9,7 +9,7 @@ from common.python_mqtt.mqtt_client import MQTTClient
 data = "python process spawned"
 print(data)
 
-capture_number = 1 # Number of times robot pauses to capture
+capture_number = 20 # Number of times robot pauses to capture
 capture_interval = 15 # Time between captures
 
 robot_ip = "192.168.8.209"
@@ -50,8 +50,8 @@ def run_motor():
             for pin in range(4):
                 GPIO.output(ControlPin[pin], step_sequence[step][pin])
             time.sleep(delay)
-        #if i % 128 == 0: # quarter turn has been completed
-            #time.sleep(1.5)
+        if i % 128 == 0: # quarter turn has been completed
+            time.sleep(1.5)
     time.sleep(1)
     rotation_complete.set()   
 

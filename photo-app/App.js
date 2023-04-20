@@ -274,6 +274,7 @@ function RobotControls({ navigation }) {
       <Text style={{ color: status.color }}>{status.text}</Text>
       {retry && (
         <Button title="Reconnect" onPress={() => serverConnection()} />
+
       )}
       <View style={styles.homeButtonContainer}>
         <TouchableOpacity onPress={() => sendMsg('start')}>
@@ -499,7 +500,12 @@ function PhotoScreen() {
   return (
     <View style={styles.genericContainer}>
       <View style={styles.line} />
-      <Button title="Click to load/refresh" onPress={displayImages} />
+      <View style={styles.homeButtonContainer}>
+        <TouchableOpacity onPress={displayImages}>
+          <Text style={styles.settingsButtonText}>{"Click to load/refresh"}</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView>
         {imageList.map((imageUrl, index) => (
           <Image key={index} source={{ uri: imageUrl }} style={{ width: windowWidth, height: windowHeight, resizeMode: 'contain', marginBottom: 5 }} />

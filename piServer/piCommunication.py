@@ -92,10 +92,12 @@ def pause_robot():
         time.sleep(1)
 
 def dock_robot():
-    """retries docking until state verified"""
+    """retries docking until state verified
     while not mqtt_client.is_docking():
         mqtt_client.dock()
         time.sleep(1)
+        """
+    pass
 
 def move_robot_off_dock_NO_VAC():
      if mqtt_client.is_docked():
@@ -148,12 +150,13 @@ def basic_photo_run(capture_number: int, capture_interval: int):
         rotation_complete.clear()
         mqtt_client.resume()
         print("resuming photo run")
-
+"""
     dock_robot()
     docking.set()
     if docking.is_set():
         print("docking flag set")
     print("returning to dock")
+    """
 
 if __name__ == "__main__":
     captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_number,capture_interval))

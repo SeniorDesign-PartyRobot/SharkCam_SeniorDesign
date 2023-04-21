@@ -9,8 +9,9 @@ from common.python_mqtt.mqtt_client import MQTTClient
 data = "python process spawned"
 print(data)
 
-capture_number = 20 # Number of times robot pauses to capture
-capture_interval = 15 # Time between captures
+#capture_number = 20 # Number of times robot pauses to capture
+capture_interval = 60 # Time between captures
+capture_duration = 15
 
 robot_ip = "192.168.8.209"
 mqtt_client = MQTTClient(robot_ip)
@@ -25,14 +26,14 @@ ToF.timing_budget = timing_budget
 detection = multiprocessing.Event()
 is_calibratedEvent = multiprocessing.Event()
 rotation_complete = multiprocessing.Event()
-docking = multiprocessing.Event()
+#docking = multiprocessing.Event()
 
 
 def run_motor():
     """Rotates motor four quarter turns"""
     ControlPin = [17, 27, 22, 23]
     num_steps = 512 # Set the number of steps for a full rotation
-    delay = 0.001 # Set delay between steps
+    delay = 0.001 # Set delay between /2steps
     step_sequence = [[1,0,0,0],[1,1,0,0],
                      [0,1,0,0],[0,1,1,0],
                      [0,0,1,0],[0,0,1,1],
@@ -45,14 +46,15 @@ def run_motor():
         GPIO.output(pin,0)
 
     # Run the motor
+    time.sleep(capture_duration)
     for i in range(num_steps):
         for step in range(8):
             for pin in range(4):
                 GPIO.output(ControlPin[pin], step_sequence[step][pin])
             time.sleep(delay)
         if i % 128 == 0: # quarter turn has been completed
-            time.sleep(1.5)
-    time.sleep(1)
+            time.sleep(capture_duration)
+    #time.sleep(1)
     rotation_complete.set()   
 
 def ranging():
@@ -109,28 +111,23 @@ def move_robot_off_dock_NO_VAC():
         print("pausing")
 
 def obstacle_avoidance():
+    if mqtt_client.is_docking():
+        dockingFlag = True
     pause_robot()
     while detection.is_set():
         mqtt_client.turn(30, floor_type="hard")
         time.sleep(1)
-    if not docking.is_set():
-        clean_robot()
-        print("OA - cleaning")
-    else:
+    if dockingFlag():
         dock_robot()
-        print("OA - docking")
+    else:
+        clean_robot()
 
 
-def basic_photo_run(capture_number: int, capture_interval: int):
-    global robot_ip
-    robot_ip = "192.168.8.209"
+def basic_photo_run(capture_interval: int):
     global mqtt_client
     mqtt_client = MQTTClient(robot_ip)
-    
-    #robot_ip = "192.168.8.209"
-    #mqtt_client = MQTTClient(robot_ip)
-    
-    capture_time = 5 # Amount of time robot pauses to capture
+
+    #capture_time = 5 # Amount of time robot pauses to capture
     
     while not is_calibratedEvent.is_set():
         pass
@@ -139,7 +136,7 @@ def basic_photo_run(capture_number: int, capture_interval: int):
     mqtt_client.resume()
     print("starting")
     
-    for i in range(capture_number):
+    while not mqtt_client.is_docking():
         time.sleep(capture_interval)
         pause_robot()
         print("pausing for photo")
@@ -159,7 +156,7 @@ def basic_photo_run(capture_number: int, capture_interval: int):
     """
 
 if __name__ == "__main__":
-    captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_number,capture_interval))
+    captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_interval))
     captureProcess.start()
     captureProcessPID = captureProcess.pid
     rangingProcess = multiprocessing.Process(target=ranging, daemon=False)
@@ -175,4 +172,4 @@ if __name__ == "__main__":
         psutil.Process(pid=captureProcessPID).resume()
         print("resuming")
         if mqtt_client.is_docked():
-            continue
+            break

@@ -4,7 +4,6 @@ const http = require("http");
 const WebSocket = require("ws");
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
-const port = 3000;
 
 //const { spawn } = require('child_process');
 

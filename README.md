@@ -3,7 +3,7 @@
 This library is intended to be used with a SharkNinja vacuum robot, and relies on the robot's autonomous navigation capabilities to run appropriately. Currently, the application can successfully start the robot, stop the robot, and take pictures at designated intervals. After they are captured, the pictures are stored in a cloud database and can be viewed from within the app. Users can choose to turn the "auto capture" feature on or off, and customize the delay between photo captures. 
 
 ## Quickstart
-This guide assumes that you have all necessary prerequisites installed, and all necessary hardware. For a detailed installation guide, check the README_SOFTWARE.md and README_HARDWARE.md.
+This guide assumes that you have all necessary prerequisites installed, and all necessary hardware. For a detailed installation guide, check the [README_SOFTWARE](/README_SOFTWARE.md) and [README_HARDWARE](/README_HARDWARE.md).
 
 To start the Pi server:
 Power on the Pi by single pressing the power button on the battery hat

@@ -3,12 +3,13 @@
 This library is intended to be used with a SharkNinja vacuum robot, and relies on the robot's autonomous navigation capabilities to run appropriately. Currently, the application can successfully start the robot, stop the robot, and take pictures at designated intervals. After they are captured, the pictures are stored in a cloud database and can be viewed from within the app. Users can choose to turn the "auto capture" feature on or off, and customize the delay between photo captures. 
 
 ## Quickstart
-This guide assumes that you have all necessary prerequisites installed, and all necessary hardware. For a detailed installation guide, check the README_SOFTWARE.md.
+This guide assumes that you have all necessary prerequisites installed, and all necessary hardware. For a detailed installation guide, check the README_SOFTWARE.md and README_HARDWARE.md.
 
 To start the Pi server:
-* Connect Raspberry Pi to the same network as the mobile application and Expo server
-* Navigate to the piServer folder
-* Run the command `node app.js`
+Power on the Pi by single pressing the power button on the battery hat
+Connect Raspberry Pi to the same network as the mobile application and Expo server
+Navigate to the piServer folder
+Run the command “node app.js”
 
 To start the mobile application:
 * Connect mobile device and device acting as the Expo server to the same network
@@ -37,4 +38,6 @@ One other “gotcha” of the app comes from the way in which photos are automat
 
 Finally, there’s the matter of calling threaded Python scripts from a Javascript application. Because the robot’s control library is written in Python, the application needs to be able to contact the Pi server and run appropriate scripts from the Pi. This problem was solved by spawning Python scripts on the Pi based on messages received from the mobile app. Sometimes the threaded scripts can act erratically. While we have not found a specific reason for this- the scripts acted as expected when not spawned from Javascript code- it’s worth noting that the current version of the software is stable. 
 
+## Full System Block Diagram
+![System Block Diagram (Pi version) v2-Full System drawio (6)](https://user-images.githubusercontent.com/34608438/235390114-d2704a3f-cf7b-40f4-b8b4-14cf80f19cf9.png)
 

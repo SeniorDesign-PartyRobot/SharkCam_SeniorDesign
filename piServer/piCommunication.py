@@ -26,6 +26,7 @@ ToF.timing_budget = timing_budget
 detection = multiprocessing.Event()
 is_calibratedEvent = multiprocessing.Event()
 rotation_complete = multiprocessing.Event()
+dockingFlag = False
 #docking = multiprocessing.Event()
 
 

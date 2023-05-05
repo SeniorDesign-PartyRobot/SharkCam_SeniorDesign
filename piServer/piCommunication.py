@@ -31,7 +31,7 @@ rotation_complete = multiprocessing.Event()
 
 def run_motor():
     """Rotates motor four quarter turns"""
-    ControlPin = [17, 27, 22, 23]
+    ControlPin = [18, 27, 22, 23]
     num_steps = 512 # Set the number of steps for a full rotation
     delay = 0.001 # Set delay between /2steps
     step_sequence = [[1,0,0,0],[1,1,0,0],

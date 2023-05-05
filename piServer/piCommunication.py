@@ -156,7 +156,7 @@ def basic_photo_run(capture_interval):
     """
 
 if __name__ == "__main__":
-    captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_interval))
+    captureProcess = multiprocessing.Process(target=basic_photo_run, args=(capture_interval,))
     captureProcess.start()
     captureProcessPID = captureProcess.pid
     rangingProcess = multiprocessing.Process(target=ranging, daemon=False)

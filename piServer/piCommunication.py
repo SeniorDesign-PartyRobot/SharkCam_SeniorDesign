@@ -26,8 +26,7 @@ ToF.timing_budget = timing_budget
 detection = multiprocessing.Event()
 is_calibratedEvent = multiprocessing.Event()
 rotation_complete = multiprocessing.Event()
-dockingFlag = False
-#docking = multiprocessing.Event()
+dockingFlag = multiprocessing.Event()
 
 
 def run_motor():
@@ -113,12 +112,12 @@ def move_robot_off_dock_NO_VAC():
 
 def obstacle_avoidance():
     if mqtt_client.is_docking():
-        dockingFlag = True
+        dockingFlag.set()
     pause_robot()
     while detection.is_set():
         mqtt_client.turn(30, floor_type="hard")
         time.sleep(1)
-    if dockingFlag():
+    if dockingFlag.is_set():
         dock_robot()
     else:
         clean_robot()

@@ -123,7 +123,7 @@ def obstacle_avoidance():
         clean_robot()
 
 
-def basic_photo_run(capture_interval: int):
+def basic_photo_run(capture_interval):
     global mqtt_client
     mqtt_client = MQTTClient(robot_ip)
 
